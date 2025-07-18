@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react';
 import styles from './edit-bizu-modal.module.css';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { useAuth } from '../context/auth';
+import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '../hooks/use-toast';
 import { Bizu } from './bizu-card';
 
@@ -17,7 +17,7 @@ export function CreateBizuModal({ open, onOpenChange }: CreateBizuModalProps) {
   const [content, setContent] = useState('');
   const [imageUrl, setImageUrl] = useState('');
 
-  const { userProfile } = useAuth();
+  const { profile } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -44,14 +44,14 @@ export function CreateBizuModal({ open, onOpenChange }: CreateBizuModalProps) {
 
   const createBizuMutation = useMutation({
     mutationFn: async (data: Partial<Bizu>) => {
-      if (!userProfile) throw new Error('Usuário não autenticado');
+      if (!profile) throw new Error('Usuário não autenticado');
       
       const res = await fetch('/api/bizus', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...data,
-          author_id: userProfile.id
+          author_id: profile.id
         }),
       });
       
@@ -77,7 +77,7 @@ export function CreateBizuModal({ open, onOpenChange }: CreateBizuModalProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!userProfile) {
+    if (!profile) {
       toast({ title: 'Erro', description: 'Você precisa estar logado para criar bizus', variant: 'destructive' });
       return;
     }

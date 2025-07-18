@@ -27,6 +27,68 @@
   }
 }
 
+/* Novo Layout da Página */
+.pageWrapper {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+/* Cabeçalho Fixo */
+.fixedHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 0.75rem 0;
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.homeButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.homeButton:hover {
+  background: #f3f4f6;
+}
+
+.homeIcon {
+  font-size: 1.25rem;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Conteúdo Principal */
+.mainContent {
+  padding-top: 80px; /* Espaço para o cabeçalho fixo */
+  min-height: calc(100vh - 80px);
+}
+
 .main {
   min-height: 100vh;
   background: #f8fafc;
@@ -158,17 +220,12 @@
 
 /* Responsividade */
 @media (max-width: 768px) {
-  .main {
-    padding: 1rem;
+  .headerContent {
+    padding: 0 1rem;
   }
 
-  .header {
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .title {
-    font-size: 2rem;
+  .homeButton span:last-child {
+    display: none; /* Esconde o texto "Home" em mobile */
   }
 
   .userInfo {

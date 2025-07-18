@@ -6,6 +6,7 @@
   justify-content: center;
   padding-bottom: 5rem;
 }
+
 .container {
   width: 100%;
   max-width: 900px;
@@ -15,37 +16,52 @@
   flex-direction: column;
   align-items: center;
 }
+
 .header {
   text-align: center;
   margin-bottom: 3rem;
 }
+
 .title {
-  font-size: 3rem;
-  font-weight: 600;
+  font-size: 3.5rem;
+  font-weight: 700;
   margin-bottom: 1rem;
+  letter-spacing: -0.02em;
 }
+
+/* Cores do Google */
 .bizuRed {
-  color: hsl(0,84.2%,60.2%);
+  color: #ea4335;
 }
-.bizuYellow {
-  color: hsl(45,93%,47%);
-}
+
 .bizuBlue {
-  color: hsl(207,90%,54%);
+  color: #4285f4;
 }
+
+.bizuYellow {
+  color: #fbbc04;
+}
+
+.bizuGreen {
+  color: #34a853;
+}
+
 .subtitle {
   color: #666;
   font-size: 1.25rem;
 }
+
 .searchBar {
   width: 100%;
   max-width: 500px;
   margin-bottom: 2rem;
 }
+
 .searchForm {
   display: flex;
   position: relative;
 }
+
 .input {
   width: 100%;
   padding: 1rem 1.5rem;
@@ -55,6 +71,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   outline: none;
 }
+
 .searchBtn {
   position: absolute;
   right: 1rem;
@@ -66,6 +83,7 @@
   font-size: 1.25rem;
   cursor: pointer;
 }
+
 .quickLinks {
   display: flex;
   flex-wrap: wrap;
@@ -73,6 +91,7 @@
   justify-content: center;
   margin-bottom: 2rem;
 }
+
 .novoBizuBtn {
   background: hsl(207,90%,54%);
   color: #fff;
@@ -85,9 +104,11 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   transition: background 0.2s;
 }
+
 .novoBizuBtn:hover {
   background: #1d4ed8;
 }
+
 .linkBtn {
   background: #f3f4f6;
   color: #111827;
@@ -100,6 +121,29 @@
   text-decoration: none;
   transition: background 0.2s;
 }
+
 .linkBtn:hover {
   background: #e5e7eb;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .container {
+    padding: 1rem;
+  }
+  
+  .quickLinks {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .novoBizuBtn,
+  .linkBtn {
+    width: 100%;
+    max-width: 300px;
+  }
 } 

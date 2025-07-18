@@ -29,54 +29,62 @@ export default function Home() {
   }
 
   return (
-    <main className={styles.main}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Bizu Desk</h1>
-        <p className={styles.subtitle}>Sistema de Conhecimento para o Time de Suporte</p>
-        
-        <div className={styles.authSection}>
-          {profile ? (
-            <div className={styles.userInfo}>
-              <span className={styles.welcome}>
-                Olá, {profile.name || profile.email}
-              </span>
-              <span className={`${styles.role} ${styles[profile.role]}`}>
-                {profile.role === 'admin' ? 'Administrador' : 'Suporte'}
-              </span>
-              {isAdmin && (
-                <button
-                  onClick={() => setShowAdmin(true)}
-                  className={styles.adminButton}
-                >
-                  Painel Admin
-                </button>
-              )}
-            </div>
-          ) : (
-            <button
-              onClick={() => setShowAuthModal(true)}
-              className={styles.loginButton}
-            >
-              Entrar
-            </button>
-          )}
+    <div className={styles.pageWrapper}>
+      {/* Cabeçalho Fixo */}
+      <header className={styles.fixedHeader}>
+        <div className={styles.headerContent}>
+          <button className={styles.homeButton}>
+            <span className={styles.homeIcon}>🏠</span>
+            <span>Home</span>
+          </button>
+          
+          <div className={styles.headerRight}>
+            {profile ? (
+              <div className={styles.userInfo}>
+                <span className={styles.welcome}>
+                  Olá, {profile.name || profile.email}
+                </span>
+                <span className={`${styles.role} ${styles[profile.role]}`}>
+                  {profile.role === 'admin' ? 'Administrador' : 'Suporte'}
+                </span>
+                {isAdmin && (
+                  <button
+                    onClick={() => setShowAdmin(true)}
+                    className={styles.adminButton}
+                  >
+                    Painel Admin
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className={styles.loginButton}
+              >
+                Entrar
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </header>
 
-      <SearchPage />
+      {/* Conteúdo Principal */}
+      <main className={styles.mainContent}>
+        <SearchPage />
 
-      {bizusLoading ? (
-        <div className={styles.loading}>
-          <div className={styles.spinner}></div>
-          <p>Carregando bizus...</p>
-        </div>
-      ) : (
-        <div className={styles.bizusGrid}>
-          {bizus.map((bizu) => (
-            <BizuCard key={bizu.id} bizu={{...bizu, views: 0}} />
-          ))}
-        </div>
-      )}
+        {bizusLoading ? (
+          <div className={styles.loading}>
+            <div className={styles.spinner}></div>
+            <p>Carregando bizus...</p>
+          </div>
+        ) : (
+          <div className={styles.bizusGrid}>
+            {bizus.map((bizu) => (
+              <BizuCard key={bizu.id} bizu={{...bizu, views: 0}} />
+            ))}
+          </div>
+        )}
+      </main>
 
       {showAuthModal && (
         <AuthModal
@@ -84,6 +92,6 @@ export default function Home() {
           onOpenChange={setShowAuthModal}
         />
       )}
-    </main>
+    </div>
   );
 }

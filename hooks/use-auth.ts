@@ -20,6 +20,11 @@ interface AuthState {
   isSuporte: boolean;
 }
 
+interface SignUpData {
+  name?: string;
+  phone?: string;
+}
+
 export function useAuth() {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
@@ -94,9 +99,43 @@ export function useAuth() {
     if (error) throw error;
   };
 
-  const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({ email, password });
+  const signUp = async (email: string, password: string, userData?: SignUpData) => {
+    const { data, error } = await supabase.auth.signUp({ 
+      email, 
+      password,
+      options: {
+        data: {
+          name: userData?.name,
+          phone: userData?.phone,
+        }
+      }
+    });
+    
     if (error) throw error;
+    
+    // Se o usuário foi criado com sucesso, criar o perfil na tabela users
+    if (data.user) {
+      try {
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert([{
+            id: data.user.id,
+            email: data.user.email!,
+            name: userData?.name || null,
+            phone: userData?.phone || null,
+            role: 'suporte',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }]);
+
+        if (profileError) {
+          console.error('Erro ao criar perfil do usuário:', profileError);
+          // Não vamos lançar erro aqui, pois o usuário já foi criado no auth
+        }
+      } catch (profileError) {
+        console.error('Erro ao criar perfil do usuário:', profileError);
+      }
+    }
   };
 
   const signOut = async () => {

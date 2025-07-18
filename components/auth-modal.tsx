@@ -13,20 +13,31 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
+
+  const resetForm = () => {
+    setEmail('');
+    setPassword('');
+    setName('');
+    setPhone('');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       if (isSignUp) {
-        await signUp(email, password);
+        // Para signup, precisamos criar o usuário no Supabase Auth e depois no nosso banco
+        await signUp(email, password, { name, phone });
         toast({
           title: 'Conta criada!',
           description: 'Verifique seu email para confirmar a conta.',
         });
+        resetForm();
       } else {
         await signIn(email, password);
         toast({
@@ -34,6 +45,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
           description: 'Bem-vindo ao BizuDesk.',
         });
         onOpenChange(false);
+        resetForm();
       }
     } catch (error: unknown) {
       let message = 'Ocorreu um erro durante a autenticação.';
@@ -48,6 +60,11 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     }
   };
 
+  const handleModeSwitch = () => {
+    setIsSignUp(!isSignUp);
+    resetForm();
+  };
+
   return (
     <div className={styles.dialog} style={{ display: open ? 'flex' : 'none' }}>
       <div className={styles.dialogContent}>
@@ -60,6 +77,31 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
           </p>
         </div>
         <form onSubmit={handleSubmit} className={styles.form}>
+          {isSignUp && (
+            <div>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Nome completo"
+                required={isSignUp}
+                className={styles.input}
+              />
+            </div>
+          )}
+          {isSignUp && (
+            <div>
+              <input
+                id="phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Telefone (opcional)"
+                className={styles.input}
+              />
+            </div>
+          )}
           <div>
             <input
               id="email"
@@ -92,7 +134,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
             <button
               type="button"
               className={styles.switchBtn}
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={handleModeSwitch}
             >
               {isSignUp ? 'Fazer login' : 'Criar conta'}
             </button>

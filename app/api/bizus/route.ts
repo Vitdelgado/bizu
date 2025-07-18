@@ -36,44 +36,111 @@ export async function GET(req: NextRequest) {
 
 // POST: Criar novo bizu
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { title, category, keywords, content, image_url, author_id } = body;
-  if (!title || !category || !keywords || !content || !author_id) {
-    return NextResponse.json({ error: 'Campos obrigatórios faltando.' }, { status: 400 });
+  try {
+    const body = await req.json();
+    const { title, category, keywords, content, image_url, author_id } = body;
+    
+    // Validação dos campos obrigatórios
+    if (!title?.trim()) {
+      return NextResponse.json({ error: 'Título é obrigatório.' }, { status: 400 });
+    }
+    if (!category?.trim()) {
+      return NextResponse.json({ error: 'Categoria é obrigatória.' }, { status: 400 });
+    }
+    if (!content?.trim()) {
+      return NextResponse.json({ error: 'Conteúdo é obrigatório.' }, { status: 400 });
+    }
+    if (!author_id) {
+      return NextResponse.json({ error: 'ID do autor é obrigatório.' }, { status: 400 });
+    }
+
+    const now = new Date().toISOString();
+    const bizuData = {
+      title: title.trim(),
+      category: category.trim(),
+      keywords: Array.isArray(keywords) ? keywords : [],
+      content: content.trim(),
+      image_url: image_url?.trim() || null,
+      author_id,
+      created_at: now,
+      updated_at: now
+    };
+
+    const { data, error } = await supabase
+      .from('bizus')
+      .insert([bizuData])
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Erro ao criar bizu:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Erro na API POST bizus:', error);
+    return NextResponse.json({ error: 'Erro interno do servidor.' }, { status: 500 });
   }
-  const { data, error } = await supabase
-    .from('bizus')
-    .insert([{ title, category, keywords, content, image_url, author_id }])
-    .select('*')
-    .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
 }
 
 // PATCH: Editar bizu
 export async function PATCH(req: NextRequest) {
-  const body = await req.json();
-  const { id, ...fields } = body;
-  if (!id) return NextResponse.json({ error: 'ID obrigatório.' }, { status: 400 });
-  const { data, error } = await supabase
-    .from('bizus')
-    .update(fields)
-    .eq('id', id)
-    .select('*')
-    .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+  try {
+    const body = await req.json();
+    const { id, ...fields } = body;
+    
+    if (!id) {
+      return NextResponse.json({ error: 'ID obrigatório.' }, { status: 400 });
+    }
+
+    const updateData = {
+      ...fields,
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await supabase
+      .from('bizus')
+      .update(updateData)
+      .eq('id', id)
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Erro ao atualizar bizu:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Erro na API PATCH bizus:', error);
+    return NextResponse.json({ error: 'Erro interno do servidor.' }, { status: 500 });
+  }
 }
 
 // DELETE: Remover bizu
 export async function DELETE(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
-  if (!id) return NextResponse.json({ error: 'ID obrigatório.' }, { status: 400 });
-  const { error } = await supabase
-    .from('bizus')
-    .delete()
-    .eq('id', id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ success: true });
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
+      return NextResponse.json({ error: 'ID obrigatório.' }, { status: 400 });
+    }
+
+    const { error } = await supabase
+      .from('bizus')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Erro ao deletar bizu:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Erro na API DELETE bizus:', error);
+    return NextResponse.json({ error: 'Erro interno do servidor.' }, { status: 500 });
+  }
 } 

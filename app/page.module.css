@@ -31,6 +31,8 @@
 .pageWrapper {
   min-height: 100vh;
   background: #f8fafc;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Cabeçalho Fixo */
@@ -44,6 +46,9 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   padding: 0.75rem 0;
+  height: 70px;
+  display: flex;
+  align-items: center;
 }
 
 .headerContent {
@@ -53,6 +58,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .homeButton {
@@ -85,14 +91,26 @@
 
 /* Conteúdo Principal */
 .mainContent {
-  padding-top: 80px; /* Espaço para o cabeçalho fixo */
-  min-height: calc(100vh - 80px);
+  padding-top: 90px; /* Aumentado para dar mais espaço ao cabeçalho fixo */
+  min-height: calc(100vh - 90px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .main {
   min-height: 100vh;
   background: #f8fafc;
   padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .header {
@@ -102,6 +120,9 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .title {
@@ -199,8 +220,8 @@
 .spinner {
   width: 32px;
   height: 32px;
-  border: 4px solid #e5e7eb;
-  border-top: 4px solid #3b82f6;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -214,8 +235,10 @@
 .bizusGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* Responsividade */
@@ -225,16 +248,74 @@
   }
 
   .homeButton span:last-child {
-    display: none; /* Esconde o texto "Home" em mobile */
+    display: none;
   }
 
   .userInfo {
     flex-direction: column;
     gap: 0.5rem;
+    align-items: flex-end;
   }
 
   .bizusGrid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .mainContent {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .header {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fixedHeader {
+    height: 60px;
+    padding: 0.5rem 0;
+  }
+
+  .mainContent {
+    padding-top: 80px;
+  }
+
+  .headerContent {
+    padding: 0 0.75rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .header {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .userInfo {
+    font-size: 0.875rem;
+  }
+
+  .welcome {
+    font-size: 0.875rem;
+  }
+
+  .role {
+    font-size: 0.625rem;
+    padding: 0.2rem 0.5rem;
   }
 }
 

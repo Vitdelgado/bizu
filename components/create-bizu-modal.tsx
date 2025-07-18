@@ -44,31 +44,49 @@ export function CreateBizuModal({ open, onOpenChange }: CreateBizuModalProps) {
 
   const createBizuMutation = useMutation({
     mutationFn: async (data: Partial<Bizu>) => {
-      if (!profile) throw new Error('Usuário não autenticado');
+      console.log('🚀 Iniciando mutation...');
+      if (!profile) {
+        console.error('❌ Profile não encontrado na mutation');
+        throw new Error('Usuário não autenticado');
+      }
+      
+      console.log('📊 Dados recebidos na mutation:', data);
+      console.log('👤 Profile na mutation:', profile);
+      
+      const requestData = {
+        ...data,
+        author_id: profile.id
+      };
+      
+      console.log('📤 Dados para API:', requestData);
       
       const res = await fetch('/api/bizus', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          author_id: profile.id
-        }),
+        body: JSON.stringify(requestData),
       });
+      
+      console.log('📥 Resposta da API:', res.status, res.statusText);
       
       if (!res.ok) {
         const errorText = await res.text();
+        console.error('❌ Erro da API:', errorText);
         throw new Error(errorText || 'Erro ao criar bizu');
       }
       
-      return res.json();
+      const result = await res.json();
+      console.log('✅ Bizu criado com sucesso:', result);
+      return result;
     },
     onSuccess: () => {
+      console.log('🎉 Mutation executada com sucesso');
       toast({ title: 'Sucesso', description: 'Bizu criado com sucesso!' });
       queryClient.invalidateQueries({ queryKey: ['/api/bizus'] });
       onOpenChange(false);
       resetForm();
     },
     onError: (error: unknown) => {
+      console.error('💥 Erro na mutation:', error);
       let message = 'Erro ao criar bizu';
       if (error instanceof Error) message = error.message;
       toast({ title: 'Erro', description: message, variant: 'destructive' });
@@ -77,23 +95,35 @@ export function CreateBizuModal({ open, onOpenChange }: CreateBizuModalProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    console.log('🔍 Iniciando submissão do formulário...');
+    console.log('👤 Profile:', profile);
+    console.log('📝 Dados do formulário:', { title, category, content, keywords, imageUrl });
+    
     if (!profile) {
+      console.error('❌ Usuário não autenticado');
       toast({ title: 'Erro', description: 'Você precisa estar logado para criar bizus', variant: 'destructive' });
       return;
     }
+    
     if (!title.trim() || !category.trim() || !content.trim()) {
+      console.error('❌ Campos obrigatórios não preenchidos');
       toast({ title: 'Erro', description: 'Preencha todos os campos obrigatórios', variant: 'destructive' });
       return;
     }
     
+    console.log('✅ Validação passou, iniciando criação...');
+    
     const keywordsArray = keywords.split(',').map(k => k.trim()).filter(Boolean);
-    createBizuMutation.mutate({
+    const bizuData = {
       title: title.trim(),
       category: category.trim(),
       keywords: keywordsArray,
       content: content.trim(),
       image_url: imageUrl.trim() || undefined
-    });
+    };
+    
+    console.log('📤 Enviando dados:', bizuData);
+    createBizuMutation.mutate(bizuData);
   };
 
   if (!open) return null;

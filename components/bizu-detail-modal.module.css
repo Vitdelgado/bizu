@@ -1,0 +1,99 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 700px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+  position: relative;
+}
+.header {
+  margin-bottom: 1.5rem;
+}
+.title {
+  font-size: 2rem;
+  color: #2563eb;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+.badge {
+  background: #f3f4f6;
+  color: #2563eb;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  padding: 0.25rem 0.75rem;
+  font-weight: 500;
+}
+.meta {
+  color: #888;
+  font-size: 0.95rem;
+}
+.section {
+  margin-bottom: 1.5rem;
+}
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+.keywordsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.keyword {
+  background: #f3f4f6;
+  color: #666;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  padding: 0.25rem 0.75rem;
+}
+.content {
+  white-space: pre-wrap;
+  color: #444;
+  line-height: 1.6;
+}
+.image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.closeBtn:hover {
+  background: #1d4ed8;
+} 

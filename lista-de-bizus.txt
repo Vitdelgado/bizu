@@ -1,0 +1,362 @@
+﻿🧮 Créditos de IA ou Banda não aparecem
+* Categoria: Suporte / Financeiro
+
+* Palavras-chave: créditos IA, banda, compra, CS, chamado
+
+* Conteúdo:
+ Quando um cliente informa que comprou créditos de IA ou banda e isso não aparece na plataforma, siga este fluxo:
+
+   1. Verifique com o time de CS se a compra foi realmente realizada;
+
+   2. Confirme a quantidade comprada e o valor pago;
+
+   3. Pergunte se o CS registrou corretamente no sistema;
+
+   4. Só depois abra o chamado com todas essas informações e mencione que houve validação com o CS.
+
+      * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+👥 Limite de Importação de Membros
+         * Categoria: Gerenciamento de Membros
+
+         * Palavras-chave: importação, limite, membros, cadastro em massa
+
+         * Conteúdo:
+ O limite máximo por importação de membros é 9.998. Recomendamos dividir em partes quando ultrapassar 5.000 registros.
+
+         * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+🧭 Navegação na Área de Membros
+            * Categoria: Experiência do Usuário
+
+            * Palavras-chave: navegação, área de membros, tutorial
+
+            * Conteúdo:
+ Veja como transitar pela área de membros neste vídeo:
+
+            * URL da imagem/vídeo: https://www.loom.com/share/e69cbab9d60c4f01849c192ff7775d92?sid=8bd2192b-33f5-4870-b339-a31163d6e5cb
+
+________________
+
+
+💬 Pop-up na Home da Área de Membros
+               * Categoria: Integrações / Personalização
+
+               * Palavras-chave: pop-up, home, área de membros, getsitecontrol
+
+               * Conteúdo:
+ Apenas clientes Black conseguem configurar pop-up na home. Não é funcionalidade oficial. Se for abrir chamado, avise que é demanda especial e sem prazo.
+Referência técnica:
+
+               * URL da imagem/vídeo: https://help.curseduca.com/integracoes/get-site-control
+
+________________
+
+
+🤖 Agente de IA
+                  * Categoria: Inteligência Artificial
+
+                  * Palavras-chave: agente IA, material, documentação
+
+                  * Conteúdo:
+ Acesse o material do Agente de IA aqui:
+
+                  * URL da imagem/vídeo: https://drive.google.com/file/d/1tZoNbBv8vJ2pjR_7jn7R5DpsotLJMGEJ/view
+
+________________
+
+
+🚫 Remover Informações do Produto
+                     * Categoria: Produto / Página
+
+                     * Palavras-chave: ocultar dados, página do produto, visualização
+
+                     * Conteúdo:
+ Sim, é possível ocultar informações específicas em páginas de produto.
+
+                     * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+🎓 Certificado MEC – Abrir Chamado
+                        * Categoria: Certificados
+
+                        * Palavras-chave: certificado MEC, suporte, dados obrigatórios
+
+                        * Conteúdo:
+ Ao abrir chamado sobre emissão de certificado MEC, envie:
+
+                        * Nome completo do aluno
+
+                        * CPF (não CNPJ)
+
+                        * E-mail
+
+                        * Data de conclusão
+
+                        * Nome e ID do produto
+
+                        * Comprovante de pagamento
+
+                        * URL da plataforma
+
+                        * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+📞 Contatos do CS
+                           * Categoria: Equipe / Suporte Interno
+
+                           * Palavras-chave: CS, contato direto, suporte
+
+                           * Conteúdo:
+ Contatos úteis do time de CS:
+
+                           * Camila Figueiredo: +55 11 9350-29538
+
+                           * Daniel Bernardo: +55 11 9350-29361
+
+                           * Marcella Adriane: +55 11 9350-29360
+
+                           * Steffany Balhass: +55 11 9350-29359
+
+                           * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+📎 Duplicar Desafios
+                              * Categoria: Gamificação / Suporte
+
+                              * Palavras-chave: duplicar desafios, gamificação, suporte
+
+                              * Conteúdo:
+ A duplicação de desafios deve ser solicitada via chamado para o time.
+
+                              * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+📃 Certificados via App
+                                 * Categoria: Certificados / App
+
+                                 * Palavras-chave: certificado, aplicativo, emissão
+
+                                 * Conteúdo:
+ Atualmente, não é possível emitir certificados via app.
+
+                                 * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+❌ Cancelamento com Gerente de Contas
+                                    * Categoria: Cancelamento / Suporte Comercial
+
+                                    * Palavras-chave: cancelamento, gerente, contas, processo
+
+                                    * Conteúdo:
+ Todo processo de cancelamento deve ser tratado com o gerente de contas responsável pelo cliente.
+
+                                    * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+🔑 API e Access Token
+                                       * Categoria: Integrações / Técnicas
+
+                                       * Palavras-chave: API, access token, chave, integrações
+
+                                       * Conteúdo:
+
+                                       * A chave API fica disponível na primeira numeração da seção de integrações.
+
+                                       * Para o Access Token, é necessário abrir um chamado com: nome da plataforma, e-mail e senha do cliente.
+
+                                       * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+📦 Configuração de Produto
+                                          * Categoria: Conteúdo / Produto
+
+                                          * Palavras-chave: configuração, produto, turmas, grupos, acesso
+
+                                          * Conteúdo:
+
+                                          * Preferencial: configurar acesso no nível de produto (turmas ou grupos);
+
+                                          * Evitar configurar acesso no nível da aula.
+⚠️ Atenção:
+
+                                          * Se uma aula for marcada como "demonstração", isso anula a configuração “não listado” do produto.
+
+                                          * Configurações conflitantes entre aula e produto podem gerar erro de acesso.
+
+                                          * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+🌐 Embeds Disponíveis
+                                             * Categoria: Integrações / Front-end
+
+                                             * Palavras-chave: embeds, integrações, links, plataforma
+
+                                             * Conteúdo:
+ A plataforma oferece os seguintes embeds:
+/m/embed, /m/home, /m/courses, /m/lessons,
+/m/c/:slugDoProduto, /m/certificate, /m/community, /m/d/:slugDoProduto,
+/m/gamification/ranking, /m/members, /m/notifications,
+/m/profile/, /m/restrict, /m/restrict/favorites, /m/restrict/groups,
+/m/restrict/notes, /m/restrict/subscriptions, /m/restrict/tracks
+
+                                             * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+🔁 Webhooks – Validações e Reprocessamento
+                                                * Categoria: Integrações / Técnicas
+
+                                                * Palavras-chave: webhook, reprocessamento, integração, pagamento
+
+                                                * Conteúdo:
+ Quando o cliente não recebe o webhook da compra:
+
+                                                   1. Verifique com o cliente o tipo de webhook e transação (assinatura, avulsa, recorrente, inteligente);
+
+                                                   2. Solicite reprocessamento da compra na plataforma de pagamento;
+
+                                                   3. Revise a documentação de integração com o cliente;
+
+                                                   4. Solicite envio do webhook para análise.
+⚠️ Webhooks não são descartados, mas podem demorar se houver fila.
+
+                                                      * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+📝 Snippets de Atendimento
+                                                         * Categoria: Atendimento / Comunicação
+
+                                                         * Palavras-chave: macros, mensagens prontas, atendimento
+
+                                                         * Conteúdo:
+ Exemplos de mensagens úteis no atendimento:
+
+                                                         * “Bom dia, tudo bem? Meu nome é [nome] e vou te auxiliar…”
+
+                                                         * “Estamos encerrando seu atendimento, caso haja mais dúvidas…”
+
+                                                         * “Ficamos sem seu retorno. Por isso estamos encerrando seu atendimento…”
+
+                                                         * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+⚙️ Funções que precisam de N2
+                                                            * Categoria: Suporte Avançado / Técnico
+
+                                                            * Palavras-chave: N2, suporte técnico, funções restritas
+
+                                                            * Conteúdo:
+ Exemplos de funções que só o N2 pode executar:
+
+                                                            * Gerar API / Access Token
+
+                                                            * Migração de aulas
+
+                                                            * Domínio com erro
+
+                                                            * Disparos em lote
+
+                                                            * Resetar pontuações
+
+                                                            * Duplicar desafios
+
+                                                            * Esconder elementos
+
+                                                            * Reset de conta Curseduca Pay
+
+                                                            * Integração com Mautic
+(e mais de 30 outras funções)
+
+                                                            * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+🧩 Widgets que o N2 pode remover
+                                                               * Categoria: Personalização / Interface
+
+                                                               * Palavras-chave: widgets, remoção, interface, personalização
+
+                                                               * Conteúdo:
+ Widgets removíveis via N2:
+
+                                                               * Widget de progresso
+
+                                                               * Minhas tarefas
+
+                                                               * Gráficos de faturamento
+
+                                                               * Calendário
+
+                                                               * Modal de avisos
+
+                                                               * Mural de engajados
+
+                                                               * Botão "Assistir aula"
+
+                                                               * URL da imagem/vídeo: (Não aplicável)
+
+________________
+
+
+🎨 Customizações via CSS
+                                                                  * Categoria: Personalização / Técnico
+
+                                                                  * Palavras-chave: CSS, remover botões, interface, personalização
+
+                                                                  * Conteúdo:
+ Exemplos de trechos CSS para esconder botões da plataforma:
+
+Remover botão de conteúdos:
+css
+CopiarEditar
+.nav-pills a[href="/restrita"] {
+    display: none !important;
+}
+
+
+Remover botão de anotações:
+css
+CopiarEditar
+.nav-pills a[href="/restrita/notes"] {
+    display: none !important;
+}
+
+
+Remover botão de turmas:
+css
+CopiarEditar
+.nav-pills a[href="/restrita/groups"] {
+    display: none !important;
+}
+
+
+                                                                     * URL da imagem/vídeo: (Não aplicável)

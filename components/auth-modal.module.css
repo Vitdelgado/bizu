@@ -1,0 +1,84 @@
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  min-height: 100vh;
+  height: 100dvh;
+  background: #f7f8fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.dialogContent {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  min-width: 320px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0 auto;
+  max-height: 90vh;
+  justify-content: center;
+}
+.dialogHeader {
+  margin-bottom: 1.5rem;
+}
+.dialogTitle {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.dialogSubtitle {
+  text-align: center;
+  color: #666;
+  font-size: 1rem;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f6f8fc;
+}
+.submitBtn {
+  width: 100%;
+  margin-top: 0.5rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.submitBtn:hover {
+  background: #1d4ed8;
+}
+.switchMode {
+  text-align: center;
+}
+.switchBtn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem;
+} 

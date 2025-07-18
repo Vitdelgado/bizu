@@ -1,0 +1,226 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.container h2 {
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+.statNumber {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.table th {
+  background: #f8fafc;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.tableRow:hover {
+  background: #f8fafc;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.userName {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.userEmail {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.role {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.role.admin {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.role.suporte {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.promoteButton {
+  background: #10b981;
+  color: white;
+}
+
+.promoteButton:hover:not(:disabled) {
+  background: #059669;
+}
+
+.demoteButton {
+  background: #f59e0b;
+  color: white;
+}
+
+.demoteButton:hover:not(:disabled) {
+  background: #d97706;
+}
+
+.deleteButton {
+  background: #ef4444;
+  color: white;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.currentUser {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  font-size: 1.125rem;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 1.125rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  font-size: 1.125rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .button {
+    width: 100%;
+    text-align: center;
+  }
+} 

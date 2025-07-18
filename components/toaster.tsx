@@ -11,7 +11,10 @@ export function Toaster() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  // Não renderizar nada até o componente estar montado no cliente
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">

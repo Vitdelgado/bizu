@@ -44,10 +44,6 @@ export function useBizus(): UseBizusReturn {
       }
 
       console.log('🔍 Iniciando busca de bizus...');
-      console.log('📊 Configuração do Supabase:', {
-        url: supabase.supabaseUrl,
-        hasAnonKey: !!supabase.supabaseKey
-      });
       
       // Testar conexão básica primeiro
       const { data: testData, error: testError } = await supabase

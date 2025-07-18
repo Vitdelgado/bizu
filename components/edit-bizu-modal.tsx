@@ -30,7 +30,7 @@ export function EditBizuModal({ bizu, open, onOpenChange }: EditBizuModalProps) 
       const data = await res.json();
       if (!Array.isArray(data)) return [];
       // Extrair categorias únicas
-      const categorias = Array.from(new Set(data.map((b: any) => b.category).filter(Boolean)));
+      const categorias = Array.from(new Set(data.map((b: { category: string }) => b.category).filter(Boolean)));
       return categorias;
     },
   });

@@ -121,30 +121,14 @@ export function SearchPage({ onGoToAdmin }: SearchPageProps) {
         </form>
       </div>
       
-      {/* Quick Links */}
-      <div className={styles.quickLinks}>
+      {/* Botão Novo Bizu - Centralizado abaixo da busca */}
+      <div className={styles.novoBizuContainer}>
         <button
           onClick={onGoToAdmin}
           className={styles.novoBizuBtn}
         >
           + Novo Bizu
         </button>
-        <a
-          href="https://help.curseduca.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.linkBtn}
-        >
-          Help Curseduca
-        </a>
-        <a
-          href="https://education.curseduca.pro/login"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.linkBtn}
-        >
-          Treinamento de Suporte
-        </a>
       </div>
       
       {/* Resultados ou Erro */}
@@ -196,6 +180,27 @@ export function SearchPage({ onGoToAdmin }: SearchPageProps) {
             </p>
           </div>
         ) : null}
+      </div>
+      
+      {/* Links de rodapé */}
+      <div className={styles.footerLinks}>
+        <a
+          href="https://help.curseduca.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.footerLink}
+        >
+          Help Curseduca
+        </a>
+        <span className={styles.footerSeparator}>•</span>
+        <a
+          href="https://education.curseduca.pro/login"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.footerLink}
+        >
+          Treinamento de Suporte
+        </a>
       </div>
       
       {/* Modal de detalhe do bizu */}

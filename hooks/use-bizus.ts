@@ -38,19 +38,29 @@ export function useBizus(): UseBizusReturn {
       setLoading(true);
       setError(null);
 
+      // Verificar se o Supabase está configurado
+      if (!supabase) {
+        throw new Error('Cliente Supabase não inicializado');
+      }
+
+      console.log('Buscando bizus...');
+      
       const { data, error } = await supabase
         .from('bizus')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) {
+        console.error('Erro do Supabase:', error);
         throw error;
       }
 
+      console.log('Bizus carregados:', data?.length || 0);
       setBizus(data || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao carregar bizus');
+      const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       console.error('Erro ao buscar bizus:', err);
+      setError(`Erro ao carregar bizus: ${errorMessage}`);
     } finally {
       setLoading(false);
     }

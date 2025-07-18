@@ -32,17 +32,18 @@ export function SearchPage({ onGoToAdmin }: SearchPageProps) {
     }
   }, [debouncedQuery]);
 
-  const { data: searchResults, isLoading: searchLoading } = useQuery<Bizu[]>({
+  const { data: searchResults, isLoading: searchLoading, error: searchError } = useQuery<Bizu[]>({
     queryKey: ['/api/bizus/search', { q: debouncedQuery, limit: showMore ? 20 : 3 }],
     enabled: debouncedQuery.trim().length > 2,
   });
 
-  const { data: recentBizus, isLoading: recentLoading } = useQuery<Bizu[]>({
+  const { data: recentBizus, isLoading: recentLoading, error: recentError } = useQuery<Bizu[]>({
     queryKey: ['/api/bizus', { limit: 3 }],
     enabled: !showResults,
   });
 
   const isLoading = searchLoading || recentLoading;
+  const error = searchError || recentError;
   const displayResults = showResults ? searchResults : recentBizus;
 
   const handleSearch = (e: React.FormEvent) => {
@@ -56,6 +57,28 @@ export function SearchPage({ onGoToAdmin }: SearchPageProps) {
     const value = e.target.value;
     setSearchQuery(value);
   };
+
+  // Componente de erro
+  const ErrorMessage = () => (
+    <div className={styles.errorContainer}>
+      <div className={styles.errorIcon}>⚠️</div>
+      <h3 className={styles.errorTitle}>Erro de Conexão</h3>
+      <p className={styles.errorMessage}>
+        Não foi possível conectar ao banco de dados. Verifique se as configurações do Supabase estão corretas.
+      </p>
+      <div className={styles.errorDetails}>
+        <p><strong>Para resolver:</strong></p>
+        <ol>
+          <li>Crie um arquivo <code>.env.local</code> na raiz do projeto</li>
+          <li>Adicione as variáveis do Supabase:</li>
+          <li><code>NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co</code></li>
+          <li><code>NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima</code></li>
+          <li>Reinicie o servidor de desenvolvimento</li>
+        </ol>
+        <p><strong>Obtenha essas informações em:</strong> <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">https://supabase.com</a> → Seu Projeto → Settings → API</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className={styles.container}>
@@ -124,9 +147,11 @@ export function SearchPage({ onGoToAdmin }: SearchPageProps) {
         </a>
       </div>
       
-      {/* Resultados */}
+      {/* Resultados ou Erro */}
       <div style={{ width: '100%', maxWidth: 800, margin: '0 auto', marginTop: 32 }}>
-        {isLoading ? (
+        {error ? (
+          <ErrorMessage />
+        ) : isLoading ? (
           <div style={{ textAlign: 'center', color: '#888' }}>Carregando...</div>
         ) : displayResults && displayResults.length > 0 ? (
           <>

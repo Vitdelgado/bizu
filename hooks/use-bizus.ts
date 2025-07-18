@@ -43,23 +43,48 @@ export function useBizus(): UseBizusReturn {
         throw new Error('Cliente Supabase não inicializado');
       }
 
-      console.log('Buscando bizus...');
+      console.log('🔍 Iniciando busca de bizus...');
+      console.log('📊 Configuração do Supabase:', {
+        url: supabase.supabaseUrl,
+        hasAnonKey: !!supabase.supabaseKey
+      });
+      
+      // Testar conexão básica primeiro
+      const { data: testData, error: testError } = await supabase
+        .from('bizus')
+        .select('count')
+        .limit(1);
+
+      console.log('🧪 Teste de conexão:', { testData, testError });
+      
+      if (testError) {
+        console.error('❌ Erro no teste de conexão:', testError);
+        throw testError;
+      }
+
+      console.log('✅ Conexão testada com sucesso, buscando bizus...');
       
       const { data, error } = await supabase
         .from('bizus')
         .select('*')
         .order('created_at', { ascending: false });
 
+      console.log('📋 Resultado da busca:', { 
+        data: data?.length || 0, 
+        error: error ? error.message : null,
+        errorDetails: error
+      });
+
       if (error) {
-        console.error('Erro do Supabase:', error);
+        console.error('❌ Erro do Supabase:', error);
         throw error;
       }
 
-      console.log('Bizus carregados:', data?.length || 0);
+      console.log('✅ Bizus carregados com sucesso:', data?.length || 0);
       setBizus(data || []);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
-      console.error('Erro ao buscar bizus:', err);
+      console.error('💥 Erro completo ao buscar bizus:', err);
       setError(`Erro ao carregar bizus: ${errorMessage}`);
     } finally {
       setLoading(false);

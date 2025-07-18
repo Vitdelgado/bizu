@@ -4,6 +4,7 @@ import './globals.css'
 import { AuthProvider } from '@/context/auth-provider'
 import { QueryProvider } from '@/components/query-provider'
 import { Toaster } from '@/components/toaster'
+import { ClientOnly } from '@/components/client-only'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,7 +24,9 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             {children}
-            <Toaster />
+            <ClientOnly>
+              <Toaster />
+            </ClientOnly>
           </AuthProvider>
         </QueryProvider>
       </body>

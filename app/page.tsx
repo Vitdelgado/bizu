@@ -7,6 +7,7 @@ import { AuthModal } from '@/components/auth-modal';
 import { BizuCard } from '@/components/bizu-card';
 import { SearchPage } from '@/components/search-page';
 import { AdminPage } from '@/components/admin-page';
+import { CreateBizuModal } from '@/components/create-bizu-modal';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
   const { bizus, loading: bizusLoading } = useBizus();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showCreateBizuModal, setShowCreateBizuModal] = useState(false);
 
   if (loading) {
     return (
@@ -70,7 +72,7 @@ export default function Home() {
 
       {/* Conteúdo Principal */}
       <main className={styles.mainContent}>
-        <SearchPage />
+        <SearchPage onGoToAdmin={() => setShowCreateBizuModal(true)} />
 
         {bizusLoading ? (
           <div className={styles.loading}>
@@ -90,6 +92,13 @@ export default function Home() {
         <AuthModal
           open={showAuthModal}
           onOpenChange={setShowAuthModal}
+        />
+      )}
+
+      {showCreateBizuModal && (
+        <CreateBizuModal
+          open={showCreateBizuModal}
+          onOpenChange={setShowCreateBizuModal}
         />
       )}
     </div>

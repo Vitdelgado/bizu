@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 
 export function Toaster() {
-  const { toasts } = useToast();
+  const { toasts, dismiss } = useToast();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -15,6 +15,11 @@ export function Toaster() {
   if (!mounted) {
     return null;
   }
+
+  const handleClose = (toastId: string) => {
+    console.log('Fechando toast:', toastId); // Debug
+    dismiss(toastId);
+  };
 
   return (
     <div className="toaster-container">
@@ -36,7 +41,7 @@ export function Toaster() {
         >
           {/* Botão de fechar no canto superior direito */}
           <button
-            onClick={() => toast.onOpenChange?.(false)}
+            onClick={() => handleClose(toast.id)}
             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 
                        transition-colors duration-200 p-1 rounded-full 
                        hover:bg-gray-100 focus:outline-none focus:ring-2 

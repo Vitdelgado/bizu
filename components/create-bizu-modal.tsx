@@ -50,6 +50,11 @@ export function CreateBizuModal({ open, onOpenChange }: CreateBizuModalProps) {
         throw new Error('Usuário não autenticado');
       }
       
+      // Obter token de sessão
+      const { supabase } = await import('@/lib/supabase');
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Token de sessão não encontrado');
+      
       console.log('📊 Dados recebidos na mutation:', data);
       console.log('👤 Profile na mutation:', profile);
       
@@ -62,7 +67,10 @@ export function CreateBizuModal({ open, onOpenChange }: CreateBizuModalProps) {
       
       const res = await fetch('/api/bizus', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify(requestData),
       });
       

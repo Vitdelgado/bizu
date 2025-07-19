@@ -69,10 +69,10 @@ export function useSafeProps<T extends Record<string, unknown>>(
   return useMemo(() => {
     try {
       const sanitized = sanitizeProps(props);
-      return sanitized || {} as T;
+      return (sanitized as T) || props;
     } catch (error) {
       console.warn(`useSafeProps error in ${componentName}:`, error);
-      return {} as T;
+      return props;
     }
   }, [props, componentName]);
 } 

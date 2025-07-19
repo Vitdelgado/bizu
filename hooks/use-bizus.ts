@@ -157,10 +157,7 @@ export function useBizus(): UseBizusReturn {
 
       const { data, error } = await supabase
         .from('bizus')
-        .insert([{
-          ...bizuData,
-          author_id: profile.id,
-        }])
+        .insert([bizuData])
         .select()
         .single();
 

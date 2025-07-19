@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 // Cache headers para diferentes tipos de resposta
 const getCacheHeaders = (maxAge: number = 300) => ({
@@ -9,6 +10,7 @@ const getCacheHeaders = (maxAge: number = 300) => ({
 
 // GET: Listar ou buscar bizus
 export async function GET(req: NextRequest) {
+  const supabase = createRouteHandlerClient({ cookies });
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id');
   const q = searchParams.get('q');
@@ -62,9 +64,18 @@ export async function GET(req: NextRequest) {
 
 // POST: Criar novo bizu
 export async function POST(req: NextRequest) {
+  const supabase = createRouteHandlerClient({ cookies });
+  
   try {
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Usuário não autenticado.' }, { status: 401 });
+    }
+
     const body = await req.json();
-    const { title, category, keywords, content, image_url, author_id } = body;
+    const { title, category, keywords, content, image_url } = body;
     
     // Validação dos campos obrigatórios
     if (!title?.trim()) {
@@ -76,9 +87,6 @@ export async function POST(req: NextRequest) {
     if (!content?.trim()) {
       return NextResponse.json({ error: 'Conteúdo é obrigatório.' }, { status: 400 });
     }
-    if (!author_id) {
-      return NextResponse.json({ error: 'ID do autor é obrigatório.' }, { status: 400 });
-    }
 
     const now = new Date().toISOString();
     const bizuData = {
@@ -87,7 +95,7 @@ export async function POST(req: NextRequest) {
       keywords: Array.isArray(keywords) ? keywords : [],
       content: content.trim(),
       image_url: image_url?.trim() || null,
-      author_id,
+      author_id: user.id, // Usar o ID do usuário autenticado
       created_at: now,
       updated_at: now
     };
@@ -119,7 +127,16 @@ export async function POST(req: NextRequest) {
 
 // PATCH: Editar bizu
 export async function PATCH(req: NextRequest) {
+  const supabase = createRouteHandlerClient({ cookies });
+  
   try {
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Usuário não autenticado.' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { id, ...fields } = body;
     
@@ -160,7 +177,16 @@ export async function PATCH(req: NextRequest) {
 
 // DELETE: Remover bizu
 export async function DELETE(req: NextRequest) {
+  const supabase = createRouteHandlerClient({ cookies });
+  
   try {
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Usuário não autenticado.' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
     

@@ -33,7 +33,12 @@ export async function middleware(request: NextRequest) {
   );
 
   // Refresh session if expired - required for Server Components
-  await supabase.auth.getUser();
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  // Se há uma sessão, garantir que ela seja mantida
+  if (session) {
+    console.log('🔄 Middleware: Sessão encontrada, mantendo...');
+  }
 
   // Headers de segurança
   response.headers.set('X-Content-Type-Options', 'nosniff');

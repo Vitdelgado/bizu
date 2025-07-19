@@ -158,13 +158,26 @@ export function useBizus(): UseBizusReturn {
         throw new Error('Usuário não autenticado');
       }
 
+      // Obter token de sessão
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log('🔑 Sessão:', { 
+        hasSession: !!session, 
+        hasToken: !!session?.access_token,
+        tokenLength: session?.access_token?.length 
+      });
+      
+      if (!session?.access_token) {
+        throw new Error('Token de sessão não encontrado');
+      }
+
       console.log('📤 Enviando requisição para API...');
       
-      // Fazer requisição para a API (cookies são enviados automaticamente)
+      // Fazer requisição para a API com token
       const response = await fetch('/api/bizus', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
         },
         body: JSON.stringify(bizuData),
       });

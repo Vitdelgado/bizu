@@ -71,7 +71,7 @@ export default function RootLayout({
         {/* Preload de ícones críticos */}
         <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning={true}>
         <ClientOnly>
           <QueryProvider>
             <AuthProvider>

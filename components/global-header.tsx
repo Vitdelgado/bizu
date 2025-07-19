@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { AuthModal } from './auth-modal';
+import Link from 'next/link';
 import styles from './global-header.module.css';
 
 export function GlobalHeader() {
@@ -19,16 +20,10 @@ export function GlobalHeader() {
       {/* Cabeçalho Fixo */}
       <header className={styles.fixedHeader}>
         <div className={styles.headerContent}>
-          <button 
-            className={styles.homeButton}
-            onClick={() => {
-              setShowAdmin(false);
-              window.location.href = '/';
-            }}
-          >
+          <Link href="/" className={styles.homeButton}>
             <span className={styles.homeIcon}>🏠</span>
             <span>Home</span>
-          </button>
+          </Link>
           
           <div className={styles.headerRight}>
             {profile ? (
@@ -49,12 +44,17 @@ export function GlobalHeader() {
                 )}
               </div>
             ) : (
-              <button
-                onClick={() => setShowAuthModal(true)}
-                className={styles.loginButton}
-              >
-                Entrar
-              </button>
+              <div className={styles.authSection}>
+                <Link href="/login" className={styles.loginLink}>
+                  Página de Login
+                </Link>
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className={styles.loginButton}
+                >
+                  Entrar
+                </button>
+              </div>
             )}
           </div>
         </div>

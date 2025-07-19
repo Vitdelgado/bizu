@@ -15,13 +15,12 @@
 }
 
 .headerContent {
-  max-width: 1200px;
+  width: 85%;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
 }
 
 .homeButton {
@@ -149,8 +148,21 @@
 }
 
 /* Responsividade */
+@media (min-width: 1367px) {
+  .headerContent {
+    width: 80%;
+  }
+}
+
+@media (max-width: 1366px) {
+  .headerContent {
+    width: 85%;
+  }
+}
+
 @media (max-width: 768px) {
   .headerContent {
+    width: 90%;
     padding: 0 1rem;
   }
 
@@ -181,6 +193,7 @@
   }
 
   .headerContent {
+    width: 95%;
     padding: 0 0.5rem;
   }
 

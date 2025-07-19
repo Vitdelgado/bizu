@@ -2,9 +2,8 @@
   min-height: calc(100vh - 120px); /* Ajustar para o cabeçalho fixo */
   background: #f8fafc;
   padding: 2rem;
-  max-width: 1200px;
+  width: 85%;
   margin: 0 auto;
-  width: 100%;
 }
 
 .loading {
@@ -142,8 +141,21 @@
 }
 
 /* Responsividade */
+@media (min-width: 1367px) {
+  .container {
+    width: 80%;
+  }
+}
+
+@media (max-width: 1366px) {
+  .container {
+    width: 85%;
+  }
+}
+
 @media (max-width: 768px) {
   .container {
+    width: 90%;
     padding: 1rem;
   }
 
@@ -153,5 +165,11 @@
 
   .stats {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
   }
 } 

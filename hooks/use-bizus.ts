@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from './use-auth';
 
@@ -27,16 +27,51 @@ interface UseBizusReturn {
   canDelete: (bizu: Bizu) => boolean;
 }
 
+// Cache local para evitar refetches desnecessários
+const cache = new Map<string, { data: Bizu[]; timestamp: number; ttl: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+
+const getCacheKey = (params?: { q?: string; limit?: number }) => {
+  const searchParams = new URLSearchParams();
+  if (params?.q) searchParams.set('q', params.q);
+  if (params?.limit) searchParams.set('limit', params.limit.toString());
+  return searchParams.toString() || 'all';
+};
+
+const isCacheValid = (timestamp: number, ttl: number) => {
+  return Date.now() - timestamp < ttl;
+};
+
 export function useBizus(): UseBizusReturn {
   const [bizus, setBizus] = useState<Bizu[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { profile, isAdmin } = useAuth();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  const fetchBizus = async () => {
+  const fetchBizus = useCallback(async (params?: { q?: string; limit?: number }) => {
     try {
       setLoading(true);
       setError(null);
+
+      // Cancelar request anterior se existir
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      // Criar novo AbortController
+      abortControllerRef.current = new AbortController();
+
+      // Verificar cache primeiro
+      const cacheKey = getCacheKey(params);
+      const cached = cache.get(cacheKey);
+      
+      if (cached && isCacheValid(cached.timestamp, cached.ttl)) {
+        console.log('📦 Usando dados do cache:', cached.data.length);
+        setBizus(cached.data);
+        setLoading(false);
+        return;
+      }
 
       // Verificar se o Supabase está configurado
       if (!supabase) {
@@ -60,10 +95,20 @@ export function useBizus(): UseBizusReturn {
 
       console.log('✅ Conexão testada com sucesso, buscando bizus...');
       
-      const { data, error } = await supabase
+      let query = supabase
         .from('bizus')
         .select('*')
         .order('created_at', { ascending: false });
+
+      if (params?.q) {
+        query = query.or(`title.ilike.%${params.q}%,category.ilike.%${params.q}%,keywords.cs.{${params.q}},content.ilike.%${params.q}%`);
+      }
+
+      if (params?.limit) {
+        query = query.limit(params.limit);
+      }
+
+      const { data, error } = await query;
 
       console.log('📋 Resultado da busca:', { 
         data: data?.length || 0, 
@@ -77,15 +122,30 @@ export function useBizus(): UseBizusReturn {
       }
 
       console.log('✅ Bizus carregados com sucesso:', data?.length || 0);
-      setBizus(data || []);
+      
+      const bizusData = data || [];
+      setBizus(bizusData);
+
+      // Salvar no cache
+      cache.set(cacheKey, {
+        data: bizusData,
+        timestamp: Date.now(),
+        ttl: CACHE_TTL
+      });
+
     } catch (err) {
+      // Ignorar erros de abort
+      if (err instanceof Error && err.name === 'AbortError') {
+        return;
+      }
+      
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       console.error('💥 Erro completo ao buscar bizus:', err);
       setError(`Erro ao carregar bizus: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const createBizu = async (bizuData: Omit<Bizu, 'id' | 'created_at' | 'updated_at'>) => {
     try {
@@ -108,7 +168,11 @@ export function useBizus(): UseBizusReturn {
         throw error;
       }
 
+      // Atualizar estado local
       setBizus(prev => [data, ...prev]);
+      
+      // Invalidar cache
+      cache.clear();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar bizu');
       console.error('Erro ao criar bizu:', err);
@@ -152,7 +216,11 @@ export function useBizus(): UseBizusReturn {
         });
       }
 
+      // Atualizar estado local
       setBizus(prev => prev.map(b => b.id === id ? data : b));
+      
+      // Invalidar cache
+      cache.clear();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao atualizar bizu');
       console.error('Erro ao atualizar bizu:', err);
@@ -182,7 +250,11 @@ export function useBizus(): UseBizusReturn {
         throw error;
       }
 
+      // Atualizar estado local
       setBizus(prev => prev.filter(b => b.id !== id));
+      
+      // Invalidar cache
+      cache.clear();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao deletar bizu');
       console.error('Erro ao deletar bizu:', err);
@@ -213,8 +285,12 @@ export function useBizus(): UseBizusReturn {
 
     return () => {
       mounted = false;
+      // Cancelar request em andamento
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
-  }, []);
+  }, [fetchBizus]);
 
   return {
     bizus,
@@ -223,7 +299,7 @@ export function useBizus(): UseBizusReturn {
     createBizu,
     updateBizu,
     deleteBizu,
-    refreshBizus: fetchBizus,
+    refreshBizus: () => fetchBizus(),
     canEdit,
     canDelete,
   };

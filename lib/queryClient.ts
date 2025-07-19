@@ -47,6 +47,8 @@ export const getQueryFn: <T>(options: {
     
     const res = await fetch(fullUrl, {
       credentials: "include",
+      // Adicionar cache para requests GET
+      cache: 'default',
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
@@ -61,13 +63,27 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: getQueryFn({ on401: "throw" }),
+      // Cache otimizado
+      staleTime: 5 * 60 * 1000, // 5 minutos - dados considerados frescos
+      gcTime: 10 * 60 * 1000, // 10 minutos - tempo no cache
       refetchInterval: false,
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      retry: false,
+      refetchOnMount: true,
+      refetchOnReconnect: true,
+      retry: (failureCount, error) => {
+        // Retry apenas para erros de rede, não para 4xx
+        if (failureCount >= 3) return false;
+        if (error instanceof Error && error.message.includes('4')) return false;
+        return true;
+      },
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     },
     mutations: {
       retry: false,
+      // Invalidate queries após mutations
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['bizus'] });
+      },
     },
   },
 }); 

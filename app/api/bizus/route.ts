@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+// Cache headers para diferentes tipos de resposta
+const getCacheHeaders = (maxAge: number = 300) => ({
+  'Cache-Control': `public, max-age=${maxAge}, s-maxage=${maxAge * 2}`,
+  'ETag': `"${Date.now()}"`, // ETag simples baseado no timestamp
+});
+
 // GET: Listar ou buscar bizus
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -8,30 +14,50 @@ export async function GET(req: NextRequest) {
   const q = searchParams.get('q');
   const limit = Number(searchParams.get('limit')) || 20;
 
-  if (id) {
-    // Buscar bizu por ID
-    const { data, error } = await supabase
+  try {
+    if (id) {
+      // Buscar bizu por ID - cache mais longo para dados específicos
+      const { data, error } = await supabase
+        .from('bizus')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+      
+      return NextResponse.json(data, {
+        headers: getCacheHeaders(600), // 10 minutos para bizus específicos
+      });
+    }
+
+    let query = supabase
       .from('bizus')
       .select('*')
-      .eq('id', id)
-      .single();
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json(data);
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (q) {
+      query = query.or(`title.ilike.%${q}%,category.ilike.%${q}%,keywords.cs.{${q}},content.ilike.%${q}%`);
+    }
+
+    const { data, error } = await query;
+    
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    
+    // Cache mais curto para listas que podem mudar frequentemente
+    const cacheTime = q ? 60 : 300; // 1 min para buscas, 5 min para listas
+    
+    return NextResponse.json(data, {
+      headers: getCacheHeaders(cacheTime),
+    });
+  } catch (error) {
+    console.error('Erro na API GET bizus:', error);
+    return NextResponse.json({ error: 'Erro interno do servidor.' }, { status: 500 });
   }
-
-  let query = supabase
-    .from('bizus')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(limit);
-
-  if (q) {
-    query = query.or(`title.ilike.%${q}%,category.ilike.%${q}%,keywords.cs.{${q}},content.ilike.%${q}%`);
-  }
-
-  const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
 }
 
 // POST: Criar novo bizu
@@ -77,7 +103,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json(data);
+    // Headers para invalidar cache
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error) {
     console.error('Erro na API POST bizus:', error);
     return NextResponse.json({ error: 'Erro interno do servidor.' }, { status: 500 });
@@ -111,7 +144,14 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json(data);
+    // Headers para invalidar cache
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error) {
     console.error('Erro na API PATCH bizus:', error);
     return NextResponse.json({ error: 'Erro interno do servidor.' }, { status: 500 });
@@ -138,7 +178,14 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true });
+    // Headers para invalidar cache
+    return NextResponse.json({ success: true }, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error) {
     console.error('Erro na API DELETE bizus:', error);
     return NextResponse.json({ error: 'Erro interno do servidor.' }, { status: 500 });

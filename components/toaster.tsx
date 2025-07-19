@@ -9,13 +9,7 @@ export function Toaster() {
 
   useEffect(() => {
     setMounted(true);
-    console.log('Toaster montado, toasts atuais:', toasts.length);
   }, []);
-
-  // Log quando toasts mudam
-  useEffect(() => {
-    console.log('Toasts atualizados:', toasts.map(t => ({ id: t.id, open: t.open })));
-  }, [toasts]);
 
   // Não renderizar nada até o componente estar montado no cliente
   if (!mounted) {
@@ -23,20 +17,8 @@ export function Toaster() {
   }
 
   const handleClose = (toastId: string) => {
-    console.log('=== DEBUG FECHAR TOAST ===');
-    console.log('Toast ID:', toastId);
-    console.log('Função dismiss disponível:', typeof dismiss);
-    console.log('Toasts antes de fechar:', toasts.map(t => ({ id: t.id, open: t.open })));
-    
-    try {
-      dismiss(toastId);
-      console.log('Função dismiss chamada com sucesso');
-    } catch (error) {
-      console.error('Erro ao chamar dismiss:', error);
-    }
+    dismiss(toastId);
   };
-
-  console.log('Renderizando Toaster com', toasts.length, 'toasts');
 
   return (
     <div className="toaster-container">
@@ -61,7 +43,6 @@ export function Toaster() {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log('Botão X clicado para toast:', toast.id);
               handleClose(toast.id);
             }}
             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 

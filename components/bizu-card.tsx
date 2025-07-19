@@ -21,19 +21,6 @@ interface BizuCardProps {
 export function BizuCard({ bizu, onClick }: BizuCardProps) {
   const [dateText, setDateText] = useState('');
 
-  // Debug: verificar se bizu é um objeto válido
-  console.log('🔍 BizuCard recebeu:', { 
-    bizu: typeof bizu, 
-    hasId: !!bizu?.id, 
-    hasTitle: !!bizu?.title,
-    hasCategory: !!bizu?.category,
-    hasKeywords: Array.isArray(bizu?.keywords),
-    hasContent: !!bizu?.content,
-    hasViews: typeof bizu?.views === 'number',
-    hasCreatedAt: !!bizu?.created_at,
-    hasAuthorId: !!bizu?.author_id
-  });
-
   useEffect(() => {
     const formatDate = (date: string) => {
       const now = new Date();

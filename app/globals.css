@@ -101,29 +101,35 @@ a {
   font-size: 14px !important;
 }
 
-/* Layout interno do toast */
-.toast-item .flex {
-  align-items: flex-start !important;
-  justify-content: space-between !important;
-}
-
-.toast-item .flex-1 {
-  flex: 1 !important;
-  min-width: 0 !important;
-  padding-right: 8px !important;
-}
-
+/* Botão de fechar específico */
 .toast-item button {
-  flex-shrink: 0 !important;
-  margin-left: 8px !important;
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  color: #6b7280 !important;
+  transition: all 0.2s ease !important;
   padding: 4px !important;
   border-radius: 50% !important;
-  transition: all 0.2s ease !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  z-index: 10 !important;
 }
 
 .toast-item button:hover {
+  color: #374151 !important;
   background-color: rgba(0, 0, 0, 0.05) !important;
   transform: scale(1.1) !important;
+}
+
+.toast-item button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Conteúdo do toast */
+.toast-item .pr-6 {
+  padding-right: 24px !important;
 }
 
 /* Responsividade para o toast */
@@ -139,6 +145,11 @@ a {
   .toast-item {
     margin-bottom: 12px;
     padding: 14px;
+  }
+  
+  .toast-item button {
+    top: 6px !important;
+    right: 6px !important;
   }
 }
 
@@ -160,5 +171,10 @@ a {
   
   .toast-item p {
     font-size: 13px !important;
+  }
+  
+  .toast-item button {
+    top: 4px !important;
+    right: 4px !important;
   }
 }

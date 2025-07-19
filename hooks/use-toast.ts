@@ -9,7 +9,7 @@ type ToastProps = {
 };
 
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_REMOVE_DELAY = 5000 // 5 segundos para auto-close
 
 type ToasterToast = ToastProps & {
   id: string
@@ -77,6 +77,11 @@ const addToRemoveQueue = (toastId: string) => {
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "ADD_TOAST":
+      // Auto-dismiss após 5 segundos
+      setTimeout(() => {
+        dispatch({ type: "DISMISS_TOAST", toastId: action.toast.id })
+      }, TOAST_REMOVE_DELAY)
+      
       return {
         ...state,
         toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),

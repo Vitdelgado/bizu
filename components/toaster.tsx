@@ -34,10 +34,10 @@ export function Toaster() {
             boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
           }}
         >
-          <div className="flex items-start gap-4 p-5">
+          <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
               {toast.title && (
-                <h4 className="font-semibold text-gray-900 mb-2 text-base leading-tight">
+                <h4 className="font-semibold text-gray-900 mb-1 text-base leading-tight">
                   {toast.title}
                 </h4>
               )}
@@ -50,11 +50,11 @@ export function Toaster() {
             <button
               onClick={() => toast.onOpenChange?.(false)}
               className="text-gray-400 hover:text-gray-600 transition-colors duration-200 
-                         p-2 rounded-full hover:bg-gray-100 flex-shrink-0
+                         p-1 rounded-full hover:bg-gray-100 flex-shrink-0 ml-3
                          focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
               title="Fechar"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>

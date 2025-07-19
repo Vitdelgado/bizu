@@ -2,15 +2,26 @@
 
 import { createContext, useContext } from 'react';
 import { useAuth } from '@/hooks/use-auth';
+import { User } from '@supabase/supabase-js';
+
+interface UserProfile {
+  id: string;
+  email: string;
+  name?: string;
+  phone?: string;
+  role: 'admin' | 'suporte';
+  created_at: string;
+  updated_at?: string;
+}
 
 interface AuthContextType {
-  user: any | null;
-  profile: any | null;
+  user: User | null;
+  profile: UserProfile | null;
   loading: boolean;
   isAdmin: boolean;
   isSuporte: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, userData?: { name?: string; phone?: string }) => Promise<void>;
   signOut: () => Promise<void>;
 }
 

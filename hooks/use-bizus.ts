@@ -151,16 +151,27 @@ export function useBizus(): UseBizusReturn {
     try {
       setError(null);
 
+      console.log('🔍 Iniciando criação de bizu...');
+      console.log('👤 Profile:', profile?.id);
+
       if (!profile) {
         throw new Error('Usuário não autenticado');
       }
 
       // Obter token de sessão
       const { data: { session } } = await supabase.auth.getSession();
+      console.log('🔑 Sessão:', { 
+        hasSession: !!session, 
+        hasToken: !!session?.access_token,
+        tokenLength: session?.access_token?.length 
+      });
+      
       if (!session?.access_token) {
         throw new Error('Token de sessão não encontrado');
       }
 
+      console.log('📤 Enviando requisição para API...');
+      
       // Fazer requisição para a API com token
       const response = await fetch('/api/bizus', {
         method: 'POST',
@@ -171,12 +182,19 @@ export function useBizus(): UseBizusReturn {
         body: JSON.stringify(bizuData),
       });
 
+      console.log('📥 Resposta da API:', { 
+        status: response.status, 
+        ok: response.ok 
+      });
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ Erro da API:', errorData);
         throw new Error(errorData.error || 'Erro ao criar bizu');
       }
 
       const data = await response.json();
+      console.log('✅ Bizu criado com sucesso:', data);
 
       // Atualizar estado local
       setBizus(prev => [data, ...prev]);
@@ -185,7 +203,7 @@ export function useBizus(): UseBizusReturn {
       cache.clear();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar bizu');
-      console.error('Erro ao criar bizu:', err);
+      console.error('💥 Erro completo ao criar bizu:', err);
       throw err;
     }
   };

@@ -226,7 +226,7 @@ export function useErrorBoundary() {
 
   const handleError = React.useCallback((error: Error) => {
     setError(error);
-    errorLogger.logError(error, 'useErrorBoundary');
+    errorLogger.log(error, 'useErrorBoundary');
   }, []);
 
   const resetError = React.useCallback(() => {

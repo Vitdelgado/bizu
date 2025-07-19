@@ -21,7 +21,7 @@ export function Toaster() {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`toast-item bg-white border border-gray-200 rounded-lg shadow-xl p-4 
+          className={`toast-item bg-white border border-gray-200 rounded-xl shadow-xl 
             transform transition-all duration-300 ease-in-out
             hover:shadow-2xl hover:scale-105
             ${toast.variant === 'destructive' 
@@ -34,10 +34,10 @@ export function Toaster() {
             boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
           }}
         >
-          <div className="flex items-start gap-3">
-            <div className="flex-1">
+          <div className="flex items-start gap-4 p-5">
+            <div className="flex-1 min-w-0">
               {toast.title && (
-                <h4 className="font-semibold text-gray-900 mb-1 text-sm">
+                <h4 className="font-semibold text-gray-900 mb-2 text-base leading-tight">
                   {toast.title}
                 </h4>
               )}
@@ -50,7 +50,8 @@ export function Toaster() {
             <button
               onClick={() => toast.onOpenChange?.(false)}
               className="text-gray-400 hover:text-gray-600 transition-colors duration-200 
-                         p-1 rounded-full hover:bg-gray-100 flex-shrink-0"
+                         p-2 rounded-full hover:bg-gray-100 flex-shrink-0
+                         focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
               title="Fechar"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -38,18 +38,36 @@ a {
 /* Estilos específicos para o Toaster */
 .toaster-container {
   position: fixed !important;
-  top: 80px !important;
-  right: 16px !important;
+  top: 90px !important;
+  right: 20px !important;
   z-index: 9999 !important;
   pointer-events: none;
-  max-width: 400px;
-  min-width: 300px;
+  max-width: 450px;
+  min-width: 320px;
 }
 
 .toast-item {
   pointer-events: auto;
-  margin-bottom: 12px;
-  animation: slideInRight 0.3s ease-out;
+  margin-bottom: 16px;
+  animation: slideInRight 0.4s ease-out;
+  border-radius: 16px !important;
+  overflow: hidden;
+  position: relative;
+}
+
+.toast-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #10b981, #3b82f6);
+  border-radius: 16px 16px 0 0;
+}
+
+.toast-item.border-red-200::before {
+  background: linear-gradient(90deg, #ef4444, #f97316);
 }
 
 @keyframes slideInRight {
@@ -68,14 +86,38 @@ a {
   box-sizing: border-box;
 }
 
+/* Melhorar a tipografia do toast */
+.toast-item h4 {
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  margin-bottom: 8px !important;
+}
+
+.toast-item p {
+  line-height: 1.5 !important;
+  margin: 0 !important;
+}
+
 /* Responsividade para o toast */
 @media (max-width: 768px) {
+  .toaster-container {
+    top: 80px !important;
+    right: 12px !important;
+    left: 12px !important;
+    max-width: none;
+    min-width: auto;
+  }
+  
+  .toast-item {
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 480px) {
   .toaster-container {
     top: 70px !important;
     right: 8px !important;
     left: 8px !important;
-    max-width: none;
-    min-width: auto;
   }
   
   .toast-item {

@@ -1,134 +1,174 @@
 interface ErrorLog {
-  id: string;
-  timestamp: number;
   error: string;
   stack?: string;
   component?: string;
-  props?: any;
-  userAgent: string;
-  url: string;
+  props?: unknown;
+  userAgent?: string;
+  url?: string;
   userId?: string;
+  timestamp: string;
+  environment: string;
+}
+
+interface ErrorLoggerConfig {
+  enabled: boolean;
+  endpoint: string;
+  maxRetries: number;
+  retryDelay: number;
 }
 
 class ErrorLogger {
-  private logs: ErrorLog[] = [];
-  private maxLogs = 100;
+  private config: ErrorLoggerConfig;
+  private retryCount: number = 0;
+  private queue: ErrorLog[] = [];
 
-  logError(error: Error, component?: string, props?: any) {
-    const errorLog: ErrorLog = {
-      id: this.generateId(),
-      timestamp: Date.now(),
-      error: error.message,
-      stack: error.stack,
-      component,
-      props: this.sanitizeProps(props),
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
-      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
-      userId: this.getCurrentUserId(),
+  constructor(config: Partial<ErrorLoggerConfig> = {}) {
+    this.config = {
+      enabled: true,
+      endpoint: '/api/error-log',
+      maxRetries: 3,
+      retryDelay: 1000,
+      ...config,
     };
-
-    this.logs.push(errorLog);
-    
-    // Manter apenas os últimos logs
-    if (this.logs.length > this.maxLogs) {
-      this.logs = this.logs.slice(-this.maxLogs);
-    }
-
-    // Log no console para desenvolvimento
-    if (process.env.NODE_ENV === 'development') {
-      console.group('🚨 Error Logger');
-      console.error('Error:', error);
-      console.log('Component:', component);
-      console.log('Props:', props);
-      console.log('User Agent:', errorLog.userAgent);
-      console.log('URL:', errorLog.url);
-      console.groupEnd();
-    }
-
-    // Enviar para serviço de monitoramento em produção
-    if (process.env.NODE_ENV === 'production') {
-      this.sendToMonitoring(errorLog);
-    }
   }
 
-  private generateId(): string {
-    return Math.random().toString(36).substr(2, 9);
-  }
+  private async sendError(log: ErrorLog): Promise<void> {
+    if (!this.config.enabled) return;
 
-  private sanitizeProps(props: any): any {
-    if (!props) return null;
-    
     try {
-      // Remover propriedades sensíveis
-      const sanitized = { ...props };
-      delete sanitized.password;
-      delete sanitized.token;
-      delete sanitized.secret;
-      
-      // Limitar profundidade para evitar loops infinitos
-      return JSON.parse(JSON.stringify(sanitized, (key, value) => {
-        if (typeof value === 'object' && value !== null) {
-          if (Array.isArray(value)) {
-            return value.slice(0, 10); // Limitar arrays
-          }
-          const keys = Object.keys(value);
-          if (keys.length > 20) {
-            return { ...value, _truncated: true };
-          }
-        }
-        return value;
-      }));
-    } catch (error) {
-      return { _error: 'Failed to sanitize props' };
-    }
-  }
-
-  private getCurrentUserId(): string | undefined {
-    // Implementar lógica para obter ID do usuário atual
-    // Pode ser do contexto de autenticação
-    return undefined;
-  }
-
-  private async sendToMonitoring(errorLog: ErrorLog) {
-    try {
-      // Enviar para serviço de monitoramento (ex: Sentry, LogRocket, etc.)
-      await fetch('/api/error-log', {
+      const response = await fetch(this.config.endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(errorLog),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(log),
       });
-    } catch (error) {
-      console.error('Failed to send error to monitoring:', error);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      // Reset retry count on success
+      this.retryCount = 0;
+    } catch {
+      this.retryCount++;
+      
+      if (this.retryCount < this.config.maxRetries) {
+        // Add to queue for retry
+        this.queue.push(log);
+        
+        setTimeout(() => {
+          this.processQueue();
+        }, this.config.retryDelay * this.retryCount);
+      } else {
+        console.error('Error logger failed after max retries');
+      }
     }
   }
 
-  getLogs(): ErrorLog[] {
-    return [...this.logs];
+  private async processQueue(): Promise<void> {
+    if (this.queue.length === 0) return;
+
+    const log = this.queue.shift();
+    if (log) {
+      await this.sendError(log);
+    }
   }
 
-  clearLogs(): void {
-    this.logs = [];
+  log(
+    error: string | Error,
+    component?: string,
+    props?: unknown,
+    additionalInfo?: Record<string, unknown>
+  ): void {
+    try {
+      const errorMessage = typeof error === 'string' ? error : error.message;
+      const errorStack = error instanceof Error ? error.stack : undefined;
+
+      const log: ErrorLog = {
+        error: errorMessage,
+        stack: errorStack,
+        component: component || 'Unknown',
+        props: props ? JSON.stringify(props) : undefined,
+        userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : undefined,
+        url: typeof window !== 'undefined' ? window.location.href : undefined,
+        userId: additionalInfo?.userId as string,
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development',
+      };
+
+      this.sendError(log);
+    } catch {
+      console.error('Failed to log error:', error);
+    }
   }
 
-  // Detectar erros React #130 especificamente
-  detectReactError130(error: Error): boolean {
-    return error.message.includes('React error #130') || 
-           error.message.includes('Minified React error #130');
+  logReactError(
+    error: Error,
+    errorInfo: { componentStack: string },
+    componentName?: string,
+    props?: unknown
+  ): void {
+    this.log(
+      error,
+      componentName || 'React Component',
+      props,
+      { componentStack: errorInfo.componentStack }
+    );
+  }
+
+  logApiError(
+    error: string | Error,
+    endpoint: string,
+    method: string,
+    status?: number,
+    response?: unknown
+  ): void {
+    this.log(
+      error,
+      'API',
+      { endpoint, method, status, response }
+    );
+  }
+
+  logValidationError(
+    error: string,
+    field: string,
+    value: unknown,
+    component?: string
+  ): void {
+    this.log(
+      error,
+      component || 'Validation',
+      { field, value }
+    );
+  }
+
+  // Método para limpar a fila de erros
+  clearQueue(): void {
+    this.queue = [];
+  }
+
+  // Método para obter estatísticas
+  getStats(): { queueLength: number; retryCount: number } {
+    return {
+      queueLength: this.queue.length,
+      retryCount: this.retryCount,
+    };
   }
 }
 
+// Instância global do logger
 export const errorLogger = new ErrorLogger();
 
-// Hook para capturar erros em componentes
-export function useErrorLogger(componentName: string) {
+// Hook para usar em componentes React
+export function useErrorLogger() {
   return {
-    logError: (error: Error, props?: any) => {
-      errorLogger.logError(error, componentName, props);
+    log: (error: string | Error, component?: string, props?: unknown) => {
+      errorLogger.log(error, component, props);
     },
-    logReactError130: (error: Error, props?: any) => {
-      if (errorLogger.detectReactError130(error)) {
-        errorLogger.logError(error, componentName, props);
-      }
+    logReactError: (error: Error, errorInfo: { componentStack: string }, componentName?: string, props?: unknown) => {
+      errorLogger.logReactError(error, errorInfo, componentName, props);
     },
   };
 } 

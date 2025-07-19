@@ -26,8 +26,8 @@ class LocalCache {
         ttl,
       };
       this.storage.setItem(key, JSON.stringify(item));
-    } catch (error) {
-      console.warn('Erro ao salvar no cache:', error);
+    } catch {
+      console.warn('Erro ao salvar no cache');
       // Se localStorage estiver cheio, limpar cache antigo
       this.clearExpired();
       try {
@@ -37,8 +37,8 @@ class LocalCache {
           ttl,
         };
         this.storage.setItem(key, JSON.stringify(item));
-      } catch (retryError) {
-        console.error('Erro ao salvar no cache após limpeza:', retryError);
+      } catch {
+        console.error('Erro ao salvar no cache após limpeza');
       }
     }
   }
@@ -57,8 +57,8 @@ class LocalCache {
       }
 
       return cacheItem.data;
-    } catch (error) {
-      console.warn('Erro ao ler do cache:', error);
+    } catch {
+      console.warn('Erro ao ler do cache');
       this.storage.removeItem(key);
       return null;
     }
@@ -67,16 +67,16 @@ class LocalCache {
   remove(key: string): void {
     try {
       this.storage.removeItem(key);
-    } catch (error) {
-      console.warn('Erro ao remover do cache:', error);
+    } catch {
+      console.warn('Erro ao remover do cache');
     }
   }
 
   clear(): void {
     try {
       this.storage.clear();
-    } catch (error) {
-      console.warn('Erro ao limpar cache:', error);
+    } catch {
+      console.warn('Erro ao limpar cache');
     }
   }
 
@@ -90,21 +90,21 @@ class LocalCache {
           const item = this.storage.getItem(key);
           if (item) {
             try {
-              const cacheItem: CacheItem<any> = JSON.parse(item);
+              const cacheItem: CacheItem<unknown> = JSON.parse(item);
               const isExpired = now - cacheItem.timestamp > cacheItem.ttl;
               
               if (isExpired) {
                 this.storage.removeItem(key);
               }
-            } catch (error) {
+            } catch {
               // Item corrompido, remover
               this.storage.removeItem(key);
             }
           }
         }
       });
-    } catch (error) {
-      console.warn('Erro ao limpar cache expirado:', error);
+    } catch {
+      console.warn('Erro ao limpar cache expirado');
     }
   }
 
@@ -113,20 +113,20 @@ class LocalCache {
   }
 
   // Cache específico para bizus
-  setBizus(data: any[], ttl: number = 5 * 60 * 1000): void {
+  setBizus(data: unknown[], ttl: number = 5 * 60 * 1000): void {
     this.set('cache_bizus', data, ttl);
   }
 
-  getBizus(): any[] | null {
+  getBizus(): unknown[] | null {
     return this.get('cache_bizus');
   }
 
   // Cache específico para usuários
-  setUsers(data: any[], ttl: number = 10 * 60 * 1000): void {
+  setUsers(data: unknown[], ttl: number = 10 * 60 * 1000): void {
     this.set('cache_users', data, ttl);
   }
 
-  getUsers(): any[] | null {
+  getUsers(): unknown[] | null {
     return this.get('cache_users');
   }
 

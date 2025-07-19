@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Criar cliente Supabase
     const cookieStore = cookies();

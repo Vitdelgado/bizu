@@ -25,11 +25,7 @@ export default function LoginPage() {
     }
   }, [loading, profile]);
 
-  // Fecha o modal e redireciona para a página principal
-  const handleAuthSuccess = () => {
-    setShowAuthModal(false);
-    router.push('/');
-  };
+
 
   if (loading) {
     return (

@@ -125,7 +125,7 @@ export default function BizusPage() {
             <div className={styles.emptyIcon}>🔍</div>
             <h3 className={styles.emptyTitle}>Nenhum bizu encontrado</h3>
             <p className={styles.emptyMessage}>
-              Não encontramos bizus para "{searchQuery}". Tente usar palavras-chave diferentes.
+              Não encontramos bizus para &quot;{searchQuery}&quot;. Tente usar palavras-chave diferentes.
             </p>
             <button
               onClick={() => setSearchQuery('')}

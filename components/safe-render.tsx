@@ -9,7 +9,7 @@ interface SafeRenderProps {
 }
 
 // Função para sanitizar props recursivamente
-function sanitizeProps(obj: any): any {
+function sanitizeProps(obj: unknown): unknown {
   if (obj === null || obj === undefined) {
     return obj;
   }
@@ -23,7 +23,7 @@ function sanitizeProps(obj: any): any {
   }
 
   if (typeof obj === 'object') {
-    const sanitized: any = {};
+    const sanitized: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(obj)) {
       // Remover propriedades que podem causar erro React #130
       if (key.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
@@ -62,7 +62,7 @@ export function SafeRender({ children, fallback, componentName = 'SafeRender' }:
 }
 
 // Hook para validação de props
-export function useSafeProps<T extends Record<string, any>>(
+export function useSafeProps<T extends Record<string, unknown>>(
   props: T,
   componentName: string
 ): T {

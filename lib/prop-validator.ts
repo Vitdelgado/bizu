@@ -14,7 +14,7 @@ type ValidationSchema<T> = {
 
 // Validador de props
 export class PropValidator {
-  static validate<T extends Record<string, any>>(
+  static validate<T extends Record<string, unknown>>(
     props: T,
     schema: ValidationSchema<T>,
     componentName: string
@@ -23,7 +23,7 @@ export class PropValidator {
 
     for (const [propName, rule] of Object.entries(schema)) {
       const value = props[propName];
-      const propPath = `${componentName}.${propName}`;
+      const propPath = propName;
 
       // Verificar se é obrigatório
       if (rule?.required && (value === undefined || value === null)) {
@@ -45,7 +45,7 @@ export class PropValidator {
       }
 
       // Verificar validador customizado
-      if (rule?.validator && !rule.validator(value)) {
+      if (rule?.validator && !rule.validator(value as T[keyof T])) {
         errors.push(rule.message || `${propPath} falhou na validação customizada`);
       }
 
@@ -63,7 +63,7 @@ export class PropValidator {
     // Log de erros se houver
     if (errors.length > 0) {
       const errorMessage = `Prop validation failed for ${componentName}: ${errors.join(', ')}`;
-      errorLogger.logError(new Error(errorMessage), componentName, props);
+      errorLogger.log(new Error(errorMessage), componentName, props);
     }
 
     return {
@@ -72,7 +72,7 @@ export class PropValidator {
     };
   }
 
-  private static checkType(value: any, expectedType: string): boolean {
+  private static checkType(value: unknown, expectedType: string): boolean {
     switch (expectedType) {
       case 'string':
         return typeof value === 'string';
@@ -91,7 +91,9 @@ export class PropValidator {
     }
   }
 
-  private static validateObject(obj: any, propPath: string, errors: string[]) {
+  private static validateObject(obj: unknown, propPath: string, errors: string[]) {
+    if (typeof obj !== 'object' || obj === null) return;
+    
     // Verificar se o objeto tem propriedades que podem causar problemas
     for (const [key, value] of Object.entries(obj)) {
       const fullPath = `${propPath}.${key}`;
@@ -111,7 +113,7 @@ export class PropValidator {
     }
   }
 
-  private static validateArray(arr: any[], propPath: string, errors: string[]) {
+  private static validateArray(arr: unknown[], propPath: string, errors: string[]) {
     // Verificar tamanho do array
     if (arr.length > 1000) {
       errors.push(`${propPath} tem tamanho excessivo (${arr.length} itens)`);
@@ -127,7 +129,7 @@ export class PropValidator {
     });
   }
 
-  private static isInvalidPropValue(value: any): boolean {
+  private static isInvalidPropValue(value: unknown): boolean {
     // Verificar valores que podem causar erro React #130
     if (value === undefined || value === null) {
       return false; // Valores nulos são válidos
@@ -155,7 +157,7 @@ export class PropValidator {
     return false;
   }
 
-  private static getObjectDepth(obj: any, currentDepth = 0): number {
+  private static getObjectDepth(obj: unknown, currentDepth = 0): number {
     if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
       return currentDepth;
     }
@@ -171,7 +173,7 @@ export class PropValidator {
   }
 
   // Validador específico para componentes React
-  static validateReactProps<T extends Record<string, any>>(
+  static validateReactProps<T extends Record<string, unknown>>(
     props: T,
     schema: ValidationSchema<T>,
     componentName: string
@@ -213,7 +215,7 @@ export class PropValidator {
 }
 
 // Hook para validação de props em componentes funcionais
-export function usePropValidation<T extends Record<string, any>>(
+export function usePropValidation<T extends Record<string, unknown>>(
   props: T,
   schema: ValidationSchema<T>,
   componentName: string
@@ -228,13 +230,13 @@ export function usePropValidation<T extends Record<string, any>>(
 }
 
 // Decorator para validação automática (TypeScript)
-export function withPropValidation<T extends Record<string, any>>(
+export function withPropValidation<T extends Record<string, unknown>>(
   schema: ValidationSchema<T>
 ) {
   return function <P extends T>(Component: React.ComponentType<P>) {
     return function ValidatedComponent(props: P) {
       const validatedProps = PropValidator.validateReactProps(props, schema, Component.name);
-      return <Component {...validatedProps} />;
+      return React.createElement(Component, validatedProps);
     };
   };
 } 

@@ -6,7 +6,6 @@ import { QueryProvider } from "@/components/query-provider";
 import { Toaster } from "@/components/toaster";
 import { AdminProvider } from "@/context/admin-context";
 import { GlobalHeader } from "@/components/global-header";
-import { ClientOnly } from "@/components/client-only";
 
 const inter = Inter({ subsets: ["latin"] });
 

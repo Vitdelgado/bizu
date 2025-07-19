@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from './ui/button';
 import { Bizu, BizuCard } from './bizu-card';
 import { BizuDetailModal } from './bizu-detail-modal';
-import { ClientOnly } from './client-only';
 
 interface SearchPageProps {
   onNovoBizuClick?: () => void;
@@ -215,32 +214,5 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
 }
 
 export function SearchPage(props: SearchPageProps) {
-  return (
-    <ClientOnly fallback={
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>
-            <span className={styles.bizuRed}>B</span>
-            <span className={styles.bizuBlue}>i</span>
-            <span className={styles.bizuYellow}>z</span>
-            <span className={styles.bizuBlue}>u</span>
-            <span className={styles.bizuGreen}> do</span>
-            <span className={styles.bizuRed}> S</span>
-            <span className={styles.bizuYellow}>u</span>
-            <span className={styles.bizuBlue}>p</span>
-            <span className={styles.bizuGreen}>o</span>
-            <span className={styles.bizuRed}>r</span>
-            <span className={styles.bizuYellow}>t</span>
-            <span className={styles.bizuBlue}>e</span>
-          </h1>
-          <p className={styles.subtitle}>Encontre soluções rápidas para o dia a dia do suporte</p>
-        </div>
-        <div style={{ textAlign: 'center', color: '#888', marginTop: 32 }}>
-          Carregando...
-        </div>
-      </div>
-    }>
-      <SearchPageContent {...props} />
-    </ClientOnly>
-  );
+  return <SearchPageContent {...props} />;
 } 

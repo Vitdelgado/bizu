@@ -9,7 +9,6 @@ import { BizuCard } from '@/components/bizu-card';
 import { SearchPage } from '@/components/search-page';
 import { AdminPage } from '@/components/admin-page';
 import { CreateBizuModal } from '@/components/create-bizu-modal';
-import { ClientOnly } from '@/components/client-only';
 import styles from './page.module.css';
 
 function HomeContent() {
@@ -83,14 +82,5 @@ function HomeContent() {
 }
 
 export default function Home() {
-  return (
-    <ClientOnly fallback={
-      <div className={styles.loading}>
-        <div className={styles.spinner}></div>
-        <p>Carregando...</p>
-      </div>
-    }>
-      <HomeContent />
-    </ClientOnly>
-  );
+  return <HomeContent />;
 }

@@ -2,7 +2,6 @@
 
 import { createContext, useContext } from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { ClientOnly } from '@/components/client-only';
 
 interface AuthContextType {
   user: any | null;

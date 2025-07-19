@@ -7,10 +7,10 @@ import { BizuDetailModal } from './bizu-detail-modal';
 import { ClientOnly } from './client-only';
 
 interface SearchPageProps {
-  onGoToAdmin?: () => void;
+  onNovoBizuClick?: () => void;
 }
 
-function SearchPageContent({ onGoToAdmin }: SearchPageProps) {
+function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
@@ -125,7 +125,7 @@ function SearchPageContent({ onGoToAdmin }: SearchPageProps) {
       {/* Botão Novo Bizu - Centralizado abaixo da busca */}
       <div className={styles.novoBizuContainer}>
         <button
-          onClick={onGoToAdmin}
+          onClick={onNovoBizuClick}
           className={styles.novoBizuBtn}
         >
           + Novo Bizu

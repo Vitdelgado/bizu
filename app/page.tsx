@@ -31,6 +31,17 @@ function HomeContent() {
     return <AdminPage />;
   }
 
+  // Função para lidar com o clique no botão "+ Novo Bizu"
+  const handleNovoBizuClick = () => {
+    if (profile) {
+      // Se o usuário está logado, abre o modal de criação de bizu
+      setShowCreateBizuModal(true);
+    } else {
+      // Se o usuário não está logado, abre o modal de autenticação
+      setShowAuthModal(true);
+    }
+  };
+
   return (
     <div className={styles.pageWrapper}>
       {/* Cabeçalho Fixo */}
@@ -73,7 +84,7 @@ function HomeContent() {
 
       {/* Conteúdo Principal */}
       <main className={styles.mainContent}>
-        <SearchPage onGoToAdmin={() => setShowCreateBizuModal(true)} />
+        <SearchPage onNovoBizuClick={handleNovoBizuClick} />
 
         {bizusLoading ? (
           <div className={styles.loading}>

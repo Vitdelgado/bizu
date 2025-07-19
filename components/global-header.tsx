@@ -35,12 +35,12 @@ export function GlobalHeader() {
           </Link>
           
           <div className={styles.headerRight}>
-            {profile ? (
+            {profile && profile.id ? (
               <div className={styles.userInfo}>
                 <span className={styles.welcome}>
-                  Olá, {profile.name || profile.email}
+                  Olá, {profile.name || profile.email || 'Usuário'}
                 </span>
-                <span className={`${styles.role} ${styles[profile.role]}`}>
+                <span className={`${styles.role} ${styles[profile.role || 'suporte']}`}>
                   {profile.role === 'admin' ? 'Administrador' : 'Suporte'}
                 </span>
                 {isAdmin && (

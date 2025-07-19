@@ -72,19 +72,17 @@ export default function RootLayout({
         <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
       </head>
       <body className={inter.className} suppressHydrationWarning={true}>
-        <ClientOnly>
-          <QueryProvider>
-            <AuthProvider>
-              <AdminProvider>
-                <GlobalHeader />
-                <main style={{ paddingTop: '70px' }}>
-                  {children}
-                </main>
-                <Toaster />
-              </AdminProvider>
-            </AuthProvider>
-          </QueryProvider>
-        </ClientOnly>
+        <QueryProvider>
+          <AuthProvider>
+            <AdminProvider>
+              <GlobalHeader />
+              <main style={{ paddingTop: '70px' }}>
+                {children}
+              </main>
+              <Toaster />
+            </AdminProvider>
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

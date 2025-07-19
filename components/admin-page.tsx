@@ -47,7 +47,7 @@ export function AdminPage() {
         >
           Gestão de Usuários
         </button>
-      </div>
+        </div>
 
       <div className={styles.content}>
         {!showUserManagement ? (
@@ -60,10 +60,10 @@ export function AdminPage() {
                 <button
                   className={styles.actionButton}
                   onClick={() => setShowUserManagement(true)}
-                >
+                    >
                   Ver Usuários
                 </button>
-              </div>
+                  </div>
               <div className={styles.stat}>
                 <h3>Bizus</h3>
                 <p>Visualize e gerencie bizus</p>
@@ -83,13 +83,13 @@ export function AdminPage() {
                 >
                   Ver Logs
                 </button>
-              </div>
-            </div>
           </div>
+        </div>
+      </div>
         ) : (
           <UserManagement />
         )}
       </div>
-    </div>
+        </div>
   );
 } 

@@ -44,17 +44,12 @@ export function GlobalHeader() {
                 )}
               </div>
             ) : (
-              <div className={styles.authSection}>
-                <Link href="/login" className={styles.loginLink}>
-                  Página de Login
-                </Link>
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className={styles.loginButton}
-                >
-                  Entrar
-                </button>
-              </div>
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className={styles.loginButton}
+              >
+                Entrar
+              </button>
             )}
           </div>
         </div>

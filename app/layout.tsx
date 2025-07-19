@@ -49,6 +49,15 @@ export const metadata: Metadata = {
   },
 };
 
+// Error Boundary Component
+function ErrorBoundary({ children }: { children: React.ReactNode }) {
+  return (
+    <div suppressHydrationWarning={true}>
+      {children}
+    </div>
+  );
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -72,17 +81,19 @@ export default function RootLayout({
       </head>
       <body className={inter.className} suppressHydrationWarning={true}>
         <div id="app">
-          <QueryProvider>
-            <AuthProvider>
-              <AdminProvider>
-                <GlobalHeader />
-                <main style={{ paddingTop: '70px' }}>
-                  {children}
-                </main>
-                <Toaster />
-              </AdminProvider>
-            </AuthProvider>
-          </QueryProvider>
+          <ErrorBoundary>
+            <QueryProvider>
+              <AuthProvider>
+                <AdminProvider>
+                  <GlobalHeader />
+                  <main style={{ paddingTop: '70px' }}>
+                    {children}
+                  </main>
+                  <Toaster />
+                </AdminProvider>
+              </AuthProvider>
+            </QueryProvider>
+          </ErrorBoundary>
         </div>
       </body>
     </html>

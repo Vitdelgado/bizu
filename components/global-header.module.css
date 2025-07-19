@@ -101,6 +101,37 @@
   background: #2563eb;
 }
 
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logoutButton:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.logoutButton:active {
+  transform: translateY(0);
+}
+
+.logoutIcon {
+  font-size: 1rem;
+}
+
+.logoutText {
+  font-size: 0.875rem;
+}
+
 .loginButton {
   padding: 0.75rem 1.5rem;
   background: #10b981;
@@ -129,6 +160,16 @@
   .userInfo {
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .logoutText {
+    display: none;
+  }
+
+  .logoutButton {
+    padding: 0.5rem;
+    min-width: 40px;
+    justify-content: center;
   }
 }
 
@@ -164,6 +205,15 @@
 
   .loginButton {
     padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .logoutButton {
+    padding: 0.4rem;
+    min-width: 36px;
+  }
+
+  .logoutIcon {
     font-size: 0.875rem;
   }
 } 

@@ -7,9 +7,17 @@ import Link from 'next/link';
 import styles from './global-header.module.css';
 
 export function GlobalHeader() {
-  const { profile, loading, isAdmin } = useAuth();
+  const { profile, loading, isAdmin, signOut } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
 
   if (loading) {
     return null; // Não mostrar cabeçalho durante carregamento
@@ -42,6 +50,14 @@ export function GlobalHeader() {
                     {showAdmin ? 'Voltar' : 'Painel Admin'}
                   </button>
                 )}
+                <button
+                  onClick={handleSignOut}
+                  className={styles.logoutButton}
+                  title="Sair"
+                >
+                  <span className={styles.logoutIcon}>🚪</span>
+                  <span className={styles.logoutText}>Sair</span>
+                </button>
               </div>
             ) : (
               <button

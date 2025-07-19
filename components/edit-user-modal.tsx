@@ -49,9 +49,9 @@ export function EditUserModal({ user, open, onOpenChange, onSave }: EditUserModa
       setError(null);
 
       await onSave(user.id, {
-        name: formData.name.trim() || null,
+        name: formData.name.trim() || undefined,
         email: formData.email.trim(),
-        phone: formData.phone.trim() || null
+        phone: formData.phone.trim() || undefined
       });
 
       onOpenChange(false);

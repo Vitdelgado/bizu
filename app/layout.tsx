@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/auth-provider'
 import { QueryProvider } from '@/components/query-provider'
 import { Toaster } from '@/components/toaster'
 import { ClientOnly } from '@/components/client-only'
+import { GlobalHeader } from '@/components/global-header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <QueryProvider>
           <AuthProvider>
+            <GlobalHeader />
             {children}
             <ClientOnly>
               <Toaster />

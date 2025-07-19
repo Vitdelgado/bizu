@@ -114,7 +114,10 @@ export async function POST(req: NextRequest) {
     // Verificar autenticação
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
+    console.log('🔍 Verificando autenticação:', { user: user?.id, error: authError });
+    
     if (authError || !user) {
+      console.log('❌ Usuário não autenticado');
       return NextResponse.json({ error: 'Usuário não autenticado.' }, { status: 401 });
     }
 

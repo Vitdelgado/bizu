@@ -106,9 +106,9 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: #ef4444;
-  color: white;
-  border: none;
+  background: none;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
@@ -116,8 +116,9 @@
 }
 
 .logoutButton:hover {
-  background: #dc2626;
-  transform: translateY(-1px);
+  background: #f3f4f6;
+  color: #374151;
+  border-color: #9ca3af;
 }
 
 .logoutButton:active {

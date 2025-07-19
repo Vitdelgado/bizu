@@ -157,10 +157,17 @@ export function useAuth() {
     if (error) throw error;
   };
 
-  return {
-    ...authState,
+  // Garantir que não retornamos objetos inválidos
+  const safeAuthState = {
+    user: authState.user,
+    profile: authState.profile,
+    loading: authState.loading,
+    isAdmin: Boolean(authState.isAdmin),
+    isSuporte: Boolean(authState.isSuporte),
     signIn,
     signUp,
     signOut,
   };
+
+  return safeAuthState;
 } 

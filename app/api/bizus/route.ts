@@ -120,8 +120,6 @@ export async function POST(req: NextRequest) {
       console.log('❌ Usuário não autenticado');
       return NextResponse.json({ error: 'Usuário não autenticado.' }, { status: 401 });
     }
-
-    const body = await req.json();
     const { title, category, keywords, content, image_url } = body;
     
     // Validação dos campos obrigatórios

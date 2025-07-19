@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import styles from './edit-bizu-modal.module.css';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { useAuth } from '../context/auth';
+import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '../hooks/use-toast';
 import { Bizu } from './bizu-card';
 
@@ -18,7 +18,7 @@ export function EditBizuModal({ bizu, open, onOpenChange }: EditBizuModalProps) 
   const [content, setContent] = useState('');
   const [imageUrl, setImageUrl] = useState('');
 
-  const { userProfile } = useAuth();
+  const { profile } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -79,7 +79,7 @@ export function EditBizuModal({ bizu, open, onOpenChange }: EditBizuModalProps) 
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!userProfile) {
+    if (!profile) {
       toast({ title: 'Erro', description: 'Você precisa estar logado para editar bizus', variant: 'destructive' });
       return;
     }

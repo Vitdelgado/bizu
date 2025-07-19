@@ -77,7 +77,7 @@ export default function RootLayout({
             <AuthProvider>
               <AdminProvider>
                 <GlobalHeader />
-                <main style={{ paddingTop: '70px' }}>
+                <main style={{ paddingTop: '70px', minHeight: 'calc(100vh - 70px)' }}>
                   {children}
                 </main>
                 <Toaster />

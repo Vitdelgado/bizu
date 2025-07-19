@@ -1,13 +1,14 @@
 .container {
   min-height: calc(100vh - 120px); /* Ajustar para o cabeçalho fixo */
   background: #f8fafc;
-  padding: 2rem;
-  width: 85%;
+  padding: 1rem 2rem;
+  width: 80%;
   margin: 0 auto;
+  padding-top: 1rem; /* Reduzir espaçamento do topo */
 }
 
 .header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem; /* Reduzir espaçamento */
   text-align: center;
 }
 
@@ -15,7 +16,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   color: #1f2937;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem; /* Reduzir espaçamento */
   text-align: center;
 }
 
@@ -158,12 +159,14 @@
 @media (min-width: 1367px) {
   .container {
     width: 80%;
+    padding: 1rem 2rem;
   }
 }
 
 @media (max-width: 1366px) {
   .container {
     width: 85%;
+    padding: 1rem 2rem;
   }
 }
 

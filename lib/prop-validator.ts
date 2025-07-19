@@ -1,3 +1,4 @@
+import React from 'react';
 import { errorLogger } from './error-logger';
 
 // Tipos de validação
@@ -236,7 +237,7 @@ export function withPropValidation<T extends Record<string, unknown>>(
   return function <P extends T>(Component: React.ComponentType<P>) {
     return function ValidatedComponent(props: P) {
       const validatedProps = PropValidator.validateReactProps(props, schema, Component.name);
-      return React.createElement(Component, validatedProps);
+      return React.createElement(Component, validatedProps as P);
     };
   };
 } 

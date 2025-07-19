@@ -24,6 +24,14 @@ export function GlobalHeader() {
     return null; // Não mostrar cabeçalho durante carregamento
   }
 
+  // Função para obter classe de role de forma segura
+  const getRoleClass = (role?: string) => {
+    if (!role || !styles[role]) {
+      return styles.suporte; // Fallback para suporte
+    }
+    return styles[role];
+  };
+
   return (
     <>
       {/* Cabeçalho Fixo */}
@@ -40,7 +48,7 @@ export function GlobalHeader() {
                 <span className={styles.welcome}>
                   Olá, {profile.name || profile.email || 'Usuário'}
                 </span>
-                <span className={`${styles.role} ${styles[profile?.role || 'suporte']}`}>
+                <span className={`${styles.role} ${getRoleClass(profile?.role)}`}>
                   {profile?.role === 'admin' ? 'Administrador' : 'Suporte'}
                 </span>
                 {isAdmin && (

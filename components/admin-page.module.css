@@ -2,7 +2,7 @@
   min-height: calc(100vh - 120px); /* Ajustar para o cabeçalho fixo */
   background: #f8fafc;
   padding: 1rem 2rem;
-  width: 80%;
+  width: 100%; /* Ocupar toda a largura disponível do parent */
   margin: 0 auto;
   padding-top: 1rem; /* Reduzir espaçamento do topo */
 }
@@ -158,21 +158,21 @@
 /* Responsividade */
 @media (min-width: 1367px) {
   .container {
-    width: 80%;
+    width: 100%;
     padding: 1rem 2rem;
   }
 }
 
 @media (max-width: 1366px) {
   .container {
-    width: 85%;
+    width: 100%;
     padding: 1rem 2rem;
   }
 }
 
 @media (max-width: 768px) {
   .container {
-    width: 90%;
+    width: 100%;
     padding: 1rem;
   }
 
@@ -202,7 +202,7 @@
 
 @media (max-width: 480px) {
   .container {
-    width: 95%;
+    width: 100%;
   }
 
   .title {

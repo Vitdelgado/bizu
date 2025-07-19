@@ -201,7 +201,19 @@ export function useBizus(): UseBizusReturn {
   };
 
   useEffect(() => {
-    fetchBizus();
+    let mounted = true;
+
+    const loadBizus = async () => {
+      if (mounted) {
+        await fetchBizus();
+      }
+    };
+
+    loadBizus();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return {

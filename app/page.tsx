@@ -8,9 +8,10 @@ import { BizuCard } from '@/components/bizu-card';
 import { SearchPage } from '@/components/search-page';
 import { AdminPage } from '@/components/admin-page';
 import { CreateBizuModal } from '@/components/create-bizu-modal';
+import { ClientOnly } from '@/components/client-only';
 import styles from './page.module.css';
 
-export default function Home() {
+function HomeContent() {
   const { profile, loading, isAdmin } = useAuth();
   const { bizus, loading: bizusLoading } = useBizus();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -102,5 +103,18 @@ export default function Home() {
         />
       )}
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <ClientOnly fallback={
+      <div className={styles.loading}>
+        <div className={styles.spinner}></div>
+        <p>Carregando...</p>
+      </div>
+    }>
+      <HomeContent />
+    </ClientOnly>
   );
 }

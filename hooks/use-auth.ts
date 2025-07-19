@@ -35,13 +35,22 @@ export function useAuth() {
   });
 
   useEffect(() => {
+    let mounted = true;
+
     // Verificar sessão inicial
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        await fetchUserProfile(session.user.id);
-      } else {
-        setAuthState(prev => ({ ...prev, loading: false }));
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (mounted && session?.user) {
+          await fetchUserProfile(session.user.id);
+        } else if (mounted) {
+          setAuthState(prev => ({ ...prev, loading: false }));
+        }
+      } catch (error) {
+        console.error('Erro ao verificar sessão:', error);
+        if (mounted) {
+          setAuthState(prev => ({ ...prev, loading: false }));
+        }
       }
     };
 
@@ -50,6 +59,8 @@ export function useAuth() {
     // Escutar mudanças de autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!mounted) return;
+        
         if (session?.user) {
           await fetchUserProfile(session.user.id);
         } else {
@@ -64,7 +75,10 @@ export function useAuth() {
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const fetchUserProfile = async (userId: string) => {
@@ -81,13 +95,13 @@ export function useAuth() {
         return;
       }
 
-      setAuthState({
-        user: authState.user,
+      setAuthState(prev => ({
+        ...prev,
         profile: data,
         loading: false,
         isAdmin: data.role === 'admin',
         isSuporte: data.role === 'suporte',
-      });
+      }));
     } catch (error) {
       console.error('Erro ao buscar perfil:', error);
       setAuthState(prev => ({ ...prev, loading: false }));

@@ -14,6 +14,7 @@ export function ClientOnly({ children, fallback = null }: ClientOnlyProps) {
     setMounted(true);
   }, []);
 
+  // Retorna o fallback durante SSR e até o componente estar montado
   if (!mounted) {
     return <>{fallback}</>;
   }

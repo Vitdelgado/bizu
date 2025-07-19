@@ -2,12 +2,17 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
+import { useBizus } from '@/hooks/use-bizus';
 import { UserManagement } from './user-management';
+import { BizuCard } from './bizu-card';
 import styles from './admin-page.module.css';
+
+type AdminSection = 'usuarios' | 'bizus' | 'auditoria';
 
 export function AdminPage() {
   const { profile, isAdmin, loading } = useAuth();
-  const [showUserManagement, setShowUserManagement] = useState(false);
+  const { bizus, loading: bizusLoading } = useBizus();
+  const [activeSection, setActiveSection] = useState<AdminSection>('bizus');
 
   // Mostrar loading enquanto verifica autenticação
   if (loading) {
@@ -44,63 +49,79 @@ export function AdminPage() {
     );
   }
 
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'usuarios':
+        return <UserManagement />;
+      
+      case 'bizus':
+        return (
+          <div className={styles.bizusSection}>
+            <h2>Bizus Cadastrados</h2>
+            {bizusLoading ? (
+              <div className={styles.loading}>
+                <div className={styles.spinner}></div>
+                <p>Carregando bizus...</p>
+              </div>
+            ) : bizus.length === 0 ? (
+              <div className={styles.emptyState}>
+                <p>Nenhum bizu cadastrado ainda.</p>
+              </div>
+            ) : (
+              <div className={styles.bizusGrid}>
+                {bizus.map((bizu) => (
+                  <BizuCard key={bizu.id} bizu={bizu} />
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'auditoria':
+        return (
+          <div className={styles.auditSection}>
+            <h2>Logs de Auditoria</h2>
+            <div className={styles.auditPlaceholder}>
+              <p>Funcionalidade de auditoria em desenvolvimento</p>
+              <p>Em breve você poderá visualizar logs de atividades do sistema.</p>
+            </div>
+          </div>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.navigation}>
-        <button
-          className={`${styles.navButton} ${!showUserManagement ? styles.active : ''}`}
-          onClick={() => setShowUserManagement(false)}
-        >
-          Dashboard
-        </button>
-        <button
-          className={`${styles.navButton} ${showUserManagement ? styles.active : ''}`}
-          onClick={() => setShowUserManagement(true)}
-        >
-          Gestão de Usuários
-        </button>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Painel Admin</h1>
+        
+        <div className={styles.navigation}>
+          <button
+            className={`${styles.navButton} ${activeSection === 'usuarios' ? styles.active : ''}`}
+            onClick={() => setActiveSection('usuarios')}
+          >
+            Usuários
+          </button>
+          <button
+            className={`${styles.navButton} ${activeSection === 'bizus' ? styles.active : ''}`}
+            onClick={() => setActiveSection('bizus')}
+          >
+            Bizus
+          </button>
+          <button
+            className={`${styles.navButton} ${activeSection === 'auditoria' ? styles.active : ''}`}
+            onClick={() => setActiveSection('auditoria')}
+          >
+            Auditoria
+          </button>
+        </div>
       </div>
 
       <div className={styles.content}>
-        {!showUserManagement ? (
-          <div className={styles.dashboard}>
-            <h2>Dashboard</h2>
-            <div className={styles.stats}>
-              <div className={styles.stat}>
-                <h3>Usuários</h3>
-                <p>Gerencie usuários do sistema</p>
-                <button
-                  className={styles.actionButton}
-                  onClick={() => setShowUserManagement(true)}
-                >
-                  Ver Usuários
-                </button>
-              </div>
-              <div className={styles.stat}>
-                <h3>Bizus</h3>
-                <p>Visualize e gerencie bizus</p>
-                <button
-                  className={styles.actionButton}
-                  onClick={() => window.location.href = '/'}
-                >
-                  Ver Bizus
-                </button>
-              </div>
-              <div className={styles.stat}>
-                <h3>Auditoria</h3>
-                <p>Logs de atividades do sistema</p>
-                <button
-                  className={styles.actionButton}
-                  onClick={() => alert('Funcionalidade de auditoria em desenvolvimento')}
-                >
-                  Ver Logs
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <UserManagement />
-        )}
+        {renderContent()}
       </div>
     </div>
   );

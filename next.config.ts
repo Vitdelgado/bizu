@@ -56,8 +56,7 @@ const nextConfig: NextConfig = {
   // Compressão
   compress: true,
   
-  // Otimizações de bundle
-  swcMinify: true,
+  // Otimizações de bundle (swcMinify é true por padrão no Next.js 13+)
   
   // Configurações de cache para desenvolvimento
   onDemandEntries: {

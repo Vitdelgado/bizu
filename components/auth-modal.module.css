@@ -5,12 +5,14 @@
   width: 100vw;
   min-height: 100vh;
   height: 100dvh;
-  background: #f7f8fa;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 999;
+  padding-top: 70px; /* Espaço para o cabeçalho fixo */
 }
+
 .dialogContent {
   background: #fff;
   border-radius: 16px;
@@ -23,29 +25,34 @@
   flex-direction: column;
   align-items: stretch;
   margin: 0 auto;
-  max-height: 90vh;
+  max-height: calc(90vh - 70px); /* Ajustar altura considerando o cabeçalho */
   justify-content: center;
 }
+
 .dialogHeader {
   margin-bottom: 1.5rem;
 }
+
 .dialogTitle {
   text-align: center;
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
+
 .dialogSubtitle {
   text-align: center;
   color: #666;
   font-size: 1rem;
 }
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 1rem;
 }
+
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -54,6 +61,7 @@
   font-size: 1rem;
   background: #f6f8fc;
 }
+
 .submitBtn {
   width: 100%;
   margin-top: 0.5rem;
@@ -67,12 +75,15 @@
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .submitBtn:hover {
   background: #1d4ed8;
 }
+
 .switchMode {
   text-align: center;
 }
+
 .switchBtn {
   background: none;
   border: none;
@@ -81,4 +92,32 @@
   cursor: pointer;
   text-decoration: underline;
   font-size: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .dialog {
+    padding-top: 60px;
+  }
+  
+  .dialogContent {
+    max-height: calc(90vh - 60px);
+    margin: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dialog {
+    padding-top: 60px;
+  }
+  
+  .dialogContent {
+    max-height: calc(90vh - 60px);
+    margin: 0.5rem;
+    padding: 2rem 1.5rem;
+  }
+  
+  .dialogTitle {
+    font-size: 1.75rem;
+  }
 } 

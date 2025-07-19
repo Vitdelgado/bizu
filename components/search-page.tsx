@@ -46,6 +46,12 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
   const error = searchError || recentError;
   const displayResults = showResults ? searchResults : recentBizus;
 
+  // LOG para debug do erro #130
+  console.log('displayResults:', displayResults);
+  
+  // Fallback defensivo para evitar erro React #130
+  const safeDisplayResults = Array.isArray(displayResults) ? displayResults : [];
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -137,17 +143,17 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
           <ErrorMessage />
         ) : isLoading ? (
           <div style={{ textAlign: 'center', color: '#888' }}>Carregando...</div>
-        ) : displayResults && displayResults.length > 0 ? (
+        ) : safeDisplayResults && safeDisplayResults.length > 0 ? (
           <>
             {showResults && (
               <div style={{ marginBottom: 16 }}>
                 <p style={{ color: '#666', fontSize: 14 }}>
-                  {displayResults.length} resultado{displayResults.length !== 1 ? 's' : ''} encontrado{displayResults.length !== 1 ? 's' : ''}
+                  {safeDisplayResults.length} resultado{safeDisplayResults.length !== 1 ? 's' : ''} encontrado{safeDisplayResults.length !== 1 ? 's' : ''}
                 </p>
               </div>
             )}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {displayResults.map((bizu) => (
+              {safeDisplayResults.map((bizu) => (
                 <BizuCard
                   key={bizu.id}
                   bizu={bizu}
@@ -158,7 +164,7 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
                 />
               ))}
             </div>
-            {showResults && !showMore && displayResults.length >= 3 && (
+            {showResults && !showMore && safeDisplayResults.length >= 3 && (
               <div style={{ textAlign: 'center', marginTop: 32 }}>
                 <Button
                   variant="outline"

@@ -56,7 +56,7 @@ function HomeContent() {
             ) : (
               <div className={styles.bizusGrid}>
                 {bizus.map((bizu) => (
-                  <BizuCard key={bizu.id} bizu={{...bizu, views: 0}} />
+                  <BizuCard key={bizu.id} bizu={bizu} />
                 ))}
               </div>
             )}

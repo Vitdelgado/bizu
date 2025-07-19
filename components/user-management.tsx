@@ -3,13 +3,26 @@
 import { useState } from 'react';
 import { useUsers } from '@/hooks/use-users';
 import { useAuth } from '@/hooks/use-auth';
+import { EditUserModal } from './edit-user-modal';
 import styles from './user-management.module.css';
 
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+  phone?: string;
+  role: 'admin' | 'suporte';
+  created_at: string;
+  updated_at?: string;
+}
+
 export function UserManagement() {
-  const { users, loading, error, promoteUser, deleteUser } = useUsers();
+  const { users, loading, error, promoteUser, deleteUser, updateUser } = useUsers();
   const { profile } = useAuth();
   const [promoting, setPromoting] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const handlePromote = async (userId: string, newRole: 'admin' | 'suporte') => {
     try {
@@ -34,6 +47,20 @@ export function UserManagement() {
       console.error('Erro ao deletar usuário:', error);
     } finally {
       setDeleting(null);
+    }
+  };
+
+  const handleEdit = (user: User) => {
+    setEditingUser(user);
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = async (userId: string, userData: { name?: string; phone?: string; email?: string }) => {
+    try {
+      await updateUser(userId, userData);
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+      throw error;
     }
   };
 
@@ -122,6 +149,14 @@ export function UserManagement() {
                 <td>{formatDate(user.created_at)}</td>
                 <td>
                   <div className={styles.actions}>
+                    <button
+                      className={`${styles.button} ${styles.editButton}`}
+                      onClick={() => handleEdit(user)}
+                      title="Editar usuário"
+                    >
+                      ✏️ Editar
+                    </button>
+                    
                     {user.id !== profile?.id && (
                       <>
                         {user.role === 'suporte' ? (
@@ -166,6 +201,13 @@ export function UserManagement() {
           <p>Nenhum usuário encontrado.</p>
         </div>
       )}
+
+      <EditUserModal
+        user={editingUser}
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        onSave={handleSaveEdit}
+      />
     </div>
   );
 } 

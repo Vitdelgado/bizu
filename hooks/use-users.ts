@@ -11,12 +11,19 @@ interface User {
   updated_at?: string;
 }
 
+interface UpdateUserData {
+  name?: string;
+  phone?: string;
+  email?: string;
+}
+
 interface UseUsersReturn {
   users: User[];
   loading: boolean;
   error: string | null;
   promoteUser: (userId: string, newRole: 'admin' | 'suporte') => Promise<void>;
   deleteUser: (userId: string) => Promise<void>;
+  updateUser: (userId: string, userData: UpdateUserData) => Promise<void>;
   refreshUsers: () => Promise<void>;
 }
 
@@ -73,6 +80,33 @@ export function useUsers(): UseUsersReturn {
     }
   };
 
+  const updateUser = async (userId: string, userData: UpdateUserData) => {
+    try {
+      setError(null);
+
+      const { error } = await supabase
+        .from('users')
+        .update({
+          ...userData,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId);
+
+      if (error) {
+        throw error;
+      }
+
+      // Atualizar lista local
+      setUsers(prev => prev.map(user => 
+        user.id === userId ? { ...user, ...userData, updated_at: new Date().toISOString() } : user
+      ));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao atualizar usuário');
+      console.error('Erro ao atualizar usuário:', err);
+      throw err;
+    }
+  };
+
   const deleteUser = async (userId: string) => {
     try {
       setError(null);
@@ -105,6 +139,7 @@ export function useUsers(): UseUsersReturn {
     error,
     promoteUser,
     deleteUser,
+    updateUser,
     refreshUsers: fetchUsers,
   };
 } 

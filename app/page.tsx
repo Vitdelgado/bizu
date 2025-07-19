@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
+import { useAdmin } from '@/context/admin-context';
 import { useBizus } from '@/hooks/use-bizus';
 import { AuthModal } from '@/components/auth-modal';
 import { BizuCard } from '@/components/bizu-card';
@@ -13,9 +14,9 @@ import styles from './page.module.css';
 
 function HomeContent() {
   const { profile, loading, isAdmin } = useAuth();
+  const { showAdmin } = useAdmin();
   const { bizus, loading: bizusLoading } = useBizus();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showAdmin, setShowAdmin] = useState(false);
   const [showCreateBizuModal, setShowCreateBizuModal] = useState(false);
 
   if (loading) {

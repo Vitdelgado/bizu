@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
+import { useAdmin } from '@/context/admin-context';
 import { AuthModal } from './auth-modal';
 import Link from 'next/link';
 import styles from './global-header.module.css';
 
 export function GlobalHeader() {
   const { profile, loading, isAdmin, signOut } = useAuth();
+  const { showAdmin, toggleAdmin } = useAdmin();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showAdmin, setShowAdmin] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -44,7 +45,7 @@ export function GlobalHeader() {
                 </span>
                 {isAdmin && (
                   <button
-                    onClick={() => setShowAdmin(!showAdmin)}
+                    onClick={toggleAdmin}
                     className={styles.adminButton}
                   >
                     {showAdmin ? 'Voltar' : 'Painel Admin'}

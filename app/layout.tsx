@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/context/auth-provider'
+import { AdminProvider } from '@/context/admin-context'
 import { QueryProvider } from '@/components/query-provider'
 import { Toaster } from '@/components/toaster'
 import { ClientOnly } from '@/components/client-only'
@@ -24,11 +25,13 @@ export default function RootLayout({
       <body className={inter.className}>
         <QueryProvider>
           <AuthProvider>
-            <GlobalHeader />
-            {children}
-            <ClientOnly>
-              <Toaster />
-            </ClientOnly>
+            <AdminProvider>
+              <GlobalHeader />
+              {children}
+              <ClientOnly>
+                <Toaster />
+              </ClientOnly>
+            </AdminProvider>
           </AuthProvider>
         </QueryProvider>
       </body>

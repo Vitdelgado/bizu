@@ -7,7 +7,6 @@ import { Toaster } from "@/components/toaster";
 import { AdminProvider } from "@/context/admin-context";
 import { GlobalHeader } from "@/components/global-header";
 import { ErrorBoundary } from "@/components/error-boundary";
-import { SafeRender } from "@/components/safe-render";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -77,25 +76,17 @@ export default function RootLayout({
       <body className={inter.className} suppressHydrationWarning={true}>
         <div id="app">
           <ErrorBoundary>
-            <SafeRender componentName="RootLayout">
-              <QueryProvider>
-                <AuthProvider>
-                  <AdminProvider>
-                    <SafeRender componentName="GlobalHeader">
-                      <GlobalHeader />
-                    </SafeRender>
-                    <main style={{ paddingTop: '70px' }}>
-                      <SafeRender componentName="MainContent">
-                        {children}
-                      </SafeRender>
-                    </main>
-                    <SafeRender componentName="Toaster">
-                      <Toaster />
-                    </SafeRender>
-                  </AdminProvider>
-                </AuthProvider>
-              </QueryProvider>
-            </SafeRender>
+            <QueryProvider>
+              <AuthProvider>
+                <AdminProvider>
+                  <GlobalHeader />
+                  <main style={{ paddingTop: '70px' }}>
+                    {children}
+                  </main>
+                  <Toaster />
+                </AdminProvider>
+              </AuthProvider>
+            </QueryProvider>
           </ErrorBoundary>
         </div>
       </body>

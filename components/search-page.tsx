@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from './ui/button';
 import { Bizu, BizuCard } from './bizu-card';
 import { BizuDetailModal } from './bizu-detail-modal';
-import { useSafeProps } from './safe-render';
 
 interface SearchPageProps {
   onNovoBizuClick?: () => void;
@@ -52,9 +51,6 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
   
   // Fallback defensivo para evitar erro React #130
   const safeDisplayResults = Array.isArray(displayResults) ? displayResults : [];
-
-  // Usar props seguras para evitar erro React #130
-  const safeProps = useSafeProps({ displayResults: safeDisplayResults }, 'SearchPage');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

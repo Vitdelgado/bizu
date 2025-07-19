@@ -6,8 +6,20 @@ import { UserManagement } from './user-management';
 import styles from './admin-page.module.css';
 
 export function AdminPage() {
-  const { profile, isAdmin } = useAuth();
+  const { profile, isAdmin, loading } = useAuth();
   const [showUserManagement, setShowUserManagement] = useState(false);
+
+  // Mostrar loading enquanto verifica autenticação
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>
+          <div className={styles.spinner}></div>
+          <p>Carregando painel administrativo...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!profile) {
     return (
@@ -47,7 +59,7 @@ export function AdminPage() {
         >
           Gestão de Usuários
         </button>
-        </div>
+      </div>
 
       <div className={styles.content}>
         {!showUserManagement ? (
@@ -60,10 +72,10 @@ export function AdminPage() {
                 <button
                   className={styles.actionButton}
                   onClick={() => setShowUserManagement(true)}
-                    >
+                >
                   Ver Usuários
                 </button>
-                  </div>
+              </div>
               <div className={styles.stat}>
                 <h3>Bizus</h3>
                 <p>Visualize e gerencie bizus</p>
@@ -83,13 +95,13 @@ export function AdminPage() {
                 >
                   Ver Logs
                 </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
         ) : (
           <UserManagement />
         )}
       </div>
-        </div>
+    </div>
   );
 } 

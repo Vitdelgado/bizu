@@ -27,10 +27,6 @@ function HomeContent() {
     );
   }
 
-  if (showAdmin && isAdmin) {
-    return <AdminPage />;
-  }
-
   // Função para lidar com o clique no botão "+ Novo Bizu"
   const handleNovoBizuClick = () => {
     if (profile) {
@@ -47,7 +43,10 @@ function HomeContent() {
       {/* Cabeçalho Fixo */}
       <header className={styles.fixedHeader}>
         <div className={styles.headerContent}>
-          <button className={styles.homeButton}>
+          <button 
+            className={styles.homeButton}
+            onClick={() => setShowAdmin(false)}
+          >
             <span className={styles.homeIcon}>🏠</span>
             <span>Home</span>
           </button>
@@ -63,10 +62,10 @@ function HomeContent() {
                 </span>
                 {isAdmin && (
                   <button
-                    onClick={() => setShowAdmin(true)}
+                    onClick={() => setShowAdmin(!showAdmin)}
                     className={styles.adminButton}
                   >
-                    Painel Admin
+                    {showAdmin ? 'Voltar' : 'Painel Admin'}
                   </button>
                 )}
               </div>
@@ -84,19 +83,25 @@ function HomeContent() {
 
       {/* Conteúdo Principal */}
       <main className={styles.mainContent}>
-        <SearchPage onNovoBizuClick={handleNovoBizuClick} />
-
-        {bizusLoading ? (
-          <div className={styles.loading}>
-            <div className={styles.spinner}></div>
-            <p>Carregando bizus...</p>
-          </div>
+        {showAdmin && isAdmin ? (
+          <AdminPage />
         ) : (
-          <div className={styles.bizusGrid}>
-            {bizus.map((bizu) => (
-              <BizuCard key={bizu.id} bizu={{...bizu, views: 0}} />
-            ))}
-          </div>
+          <>
+            <SearchPage onNovoBizuClick={handleNovoBizuClick} />
+
+            {bizusLoading ? (
+              <div className={styles.loading}>
+                <div className={styles.spinner}></div>
+                <p>Carregando bizus...</p>
+              </div>
+            ) : (
+              <div className={styles.bizusGrid}>
+                {bizus.map((bizu) => (
+                  <BizuCard key={bizu.id} bizu={{...bizu, views: 0}} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </main>
 

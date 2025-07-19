@@ -6,7 +6,7 @@ import { UserManagement } from './user-management';
 import styles from './admin-page.module.css';
 
 export function AdminPage() {
-  const { profile, isAdmin, signOut } = useAuth();
+  const { profile, isAdmin } = useAuth();
   const [showUserManagement, setShowUserManagement] = useState(false);
 
   if (!profile) {
@@ -34,17 +34,6 @@ export function AdminPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.userInfo}>
-          <h1>Painel Administrativo</h1>
-          <p>Bem-vindo, {profile.name || profile.email}</p>
-          <span className={styles.role}>Administrador</span>
-        </div>
-        <button onClick={signOut} className={styles.signOutButton}>
-          Sair
-        </button>
-      </div>
-
       <div className={styles.navigation}>
         <button
           className={`${styles.navButton} ${!showUserManagement ? styles.active : ''}`}

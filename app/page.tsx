@@ -3,9 +3,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { useAdmin } from '@/context/admin-context';
-import { useBizus } from '@/hooks/use-bizus';
 import { AuthModal } from '@/components/auth-modal';
-import { BizuCard } from '@/components/bizu-card';
 import { SearchPage } from '@/components/search-page';
 import { AdminPage } from '@/components/admin-page';
 import { CreateBizuModal } from '@/components/create-bizu-modal';
@@ -14,7 +12,6 @@ import styles from './page.module.css';
 function HomeContent() {
   const { profile, loading, isAdmin } = useAuth();
   const { showAdmin } = useAdmin();
-  const { bizus, loading: bizusLoading } = useBizus();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showCreateBizuModal, setShowCreateBizuModal] = useState(false);
 
@@ -45,25 +42,11 @@ function HomeContent() {
         {showAdmin && isAdmin ? (
           <AdminPage />
         ) : (
-          <>
-            <SearchPage onNovoBizuClick={handleNovoBizuClick} />
-
-            {bizusLoading ? (
-              <div className={styles.loading}>
-                <div className={styles.spinner}></div>
-                <p>Carregando bizus...</p>
-              </div>
-            ) : (
-              <div className={styles.bizusGrid}>
-                {bizus.map((bizu) => (
-                  <BizuCard key={bizu.id} bizu={bizu} />
-                ))}
-              </div>
-            )}
-          </>
+          <SearchPage onNovoBizuClick={handleNovoBizuClick} />
         )}
       </main>
 
+      {/* Modais */}
       {showAuthModal && (
         <AuthModal
           open={showAuthModal}

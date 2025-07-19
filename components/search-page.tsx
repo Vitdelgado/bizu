@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from './ui/button';
 import { Bizu, BizuCard } from './bizu-card';
 import { BizuDetailModal } from './bizu-detail-modal';
+import Link from 'next/link';
 
 interface SearchPageProps {
   onNovoBizuClick?: () => void;
@@ -127,14 +128,18 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
         </form>
       </div>
       
-      {/* Botão Novo Bizu - Centralizado abaixo da busca */}
-      <div className={styles.novoBizuContainer}>
+      {/* Botões de ação */}
+      <div className={styles.actionButtons}>
         <button
           onClick={onNovoBizuClick}
           className={styles.novoBizuBtn}
         >
           + Novo Bizu
         </button>
+        
+        <Link href="/bizus" className={styles.verTodosBtn}>
+          Ver Todos os Bizus
+        </Link>
       </div>
       
       {/* Resultados ou Erro */}
@@ -200,7 +205,7 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
         </a>
         <span className={styles.footerSeparator}>•</span>
         <a
-          href="https://education.curseduca.pro/login"
+          href="https://treinamento.curseduca.com"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.footerLink}
@@ -208,13 +213,15 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
           Treinamento de Suporte
         </a>
       </div>
-      
-      {/* Modal de detalhe do bizu */}
-      <BizuDetailModal
-        bizu={selectedBizu}
-        open={showDetailModal}
-        onOpenChange={setShowDetailModal}
-      />
+
+      {/* Modal de detalhes */}
+      {showDetailModal && selectedBizu && (
+        <BizuDetailModal
+          bizu={selectedBizu}
+          open={showDetailModal}
+          onOpenChange={setShowDetailModal}
+        />
+      )}
     </div>
   );
 }

@@ -1,10 +1,12 @@
 import * as React from "react"
 
-// Omitir tipos e imports de UI customizados para evitar erro temporário
-// import type { ToastActionElement, ToastProps } from "@/components/ui/toast"
-
-type ToastActionElement = any;
-type ToastProps = any;
+// Tipos específicos em vez de any para evitar erro React #130
+type ToastActionElement = React.ReactElement | null;
+type ToastProps = {
+  variant?: 'default' | 'destructive';
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+};
 
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000

@@ -34,3 +34,51 @@ a {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Estilos específicos para o Toaster */
+.toaster-container {
+  position: fixed !important;
+  top: 80px !important;
+  right: 16px !important;
+  z-index: 9999 !important;
+  pointer-events: none;
+  max-width: 400px;
+  min-width: 300px;
+}
+
+.toast-item {
+  pointer-events: auto;
+  margin-bottom: 12px;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Garantir que o toast não seja afetado por outros elementos */
+.toast-item * {
+  box-sizing: border-box;
+}
+
+/* Responsividade para o toast */
+@media (max-width: 768px) {
+  .toaster-container {
+    top: 70px !important;
+    right: 8px !important;
+    left: 8px !important;
+    max-width: none;
+    min-width: auto;
+  }
+  
+  .toast-item {
+    margin-bottom: 8px;
+  }
+}

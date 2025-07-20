@@ -57,9 +57,11 @@ export function AdminPage() {
 
   // Inicializar estado de likes quando bizus carregam
   useEffect(() => {
-    bizus.forEach(bizu => {
-      setInitialLikeState(bizu.id, bizu.is_liked || false, bizu.likes);
-    });
+    if (bizus.length > 0) {
+      bizus.forEach(bizu => {
+        setInitialLikeState(bizu.id, bizu.is_liked || false, bizu.likes);
+      });
+    }
   }, [bizus, setInitialLikeState]);
 
   // Bizus com estado de like atualizado

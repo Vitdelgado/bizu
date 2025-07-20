@@ -5,7 +5,6 @@ import { Button } from './ui/button';
 import { Bizu, BizuCard } from './bizu-card';
 import { BizuDetailModal } from './bizu-detail-modal';
 import { EditBizuModal } from './edit-bizu-modal';
-import { TopBizusSection } from './top-bizus-section';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
@@ -211,138 +210,115 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
   );
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>
-          <span className={styles.bizuRed}>B</span>
-          <span className={styles.bizuBlue}>i</span>
-          <span className={styles.bizuYellow}>z</span>
-          <span className={styles.bizuBlue}>u</span>
-          <span className={styles.bizuGreen}> do</span>
-          <span className={styles.bizuRed}> S</span>
-          <span className={styles.bizuYellow}>u</span>
-          <span className={styles.bizuBlue}>p</span>
-          <span className={styles.bizuGreen}>o</span>
-          <span className={styles.bizuRed}>r</span>
-          <span className={styles.bizuYellow}>t</span>
-          <span className={styles.bizuBlue}>e</span>
-        </h1>
-        <p className={styles.subtitle}>Encontre soluções rápidas para o dia a dia do suporte</p>
-      </div>
-      
-      {/* Search Bar */}
-      <div className={styles.searchBar}>
-        <form onSubmit={handleSearch} className={styles.searchForm}>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleInputChange}
-            className={styles.input}
-            placeholder="Qual é o bizu?"
-          />
-          <Button
-            type="submit"
-            size="icon"
-            variant="ghost"
-            className={styles.searchBtn}
-          >
-            🔍
-          </Button>
-        </form>
-      </div>
-      
-      {/* Botões de ação */}
-      <div className={styles.actionButtons}>
-        <button
-          onClick={onNovoBizuClick}
-          className={styles.novoBizuBtn}
-        >
-          + Novo Bizu
-        </button>
+    <>
+      {/* Header e Barra de Pesquisa */}
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>
+            <span className={styles.bizuRed}>B</span>
+            <span className={styles.bizuBlue}>i</span>
+            <span className={styles.bizuYellow}>z</span>
+            <span className={styles.bizuBlue}>u</span>
+            <span className={styles.bizuGreen}> do</span>
+            <span className={styles.bizuRed}> S</span>
+            <span className={styles.bizuYellow}>u</span>
+            <span className={styles.bizuBlue}>p</span>
+            <span className={styles.bizuGreen}>o</span>
+            <span className={styles.bizuRed}>r</span>
+            <span className={styles.bizuYellow}>t</span>
+            <span className={styles.bizuBlue}>e</span>
+          </h1>
+          <p className={styles.subtitle}>Encontre soluções rápidas para o dia a dia do suporte</p>
+        </div>
         
-        <Link href="/bizus" className={styles.verTodosBtn}>
-          Ver Todos os Bizus
-        </Link>
-      </div>
-      
-      {/* Top 10 Bizus */}
-      <div className={styles.topBizusSection}>
-        <TopBizusSection />
-      </div>
-      
-      {/* Resultados de busca (apenas quando há busca ativa) */}
-      {showResults && (
-        <div style={{ width: '100%', maxWidth: 800, margin: '0 auto', marginTop: 32 }}>
-          {error ? (
-            <ErrorMessage />
-          ) : isLoading ? (
-            <div style={{ textAlign: 'center', color: '#888' }}>Carregando...</div>
-          ) : validatedResults && validatedResults.length > 0 ? (
-            <>
-              <div style={{ marginBottom: 16 }}>
-                <p style={{ color: '#666', fontSize: 14 }}>
-                  {validatedResults.length} resultado{validatedResults.length !== 1 ? 's' : ''} encontrado{validatedResults.length !== 1 ? 's' : ''}
+        {/* Search Bar */}
+        <div className={styles.searchBar}>
+          <form onSubmit={handleSearch} className={styles.searchForm}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleInputChange}
+              className={styles.input}
+              placeholder="Qual é o bizu?"
+            />
+            <Button
+              type="submit"
+              size="icon"
+              variant="ghost"
+              className={styles.searchBtn}
+            >
+              🔍
+            </Button>
+          </form>
+        </div>
+        
+        {/* Botões de ação */}
+        <div className={styles.actionButtons}>
+          <button
+            onClick={onNovoBizuClick}
+            className={styles.novoBizuBtn}
+          >
+            + Novo Bizu
+          </button>
+          
+          <Link href="/bizus" className={styles.verTodosBtn}>
+            Ver Todos os Bizus
+          </Link>
+        </div>
+        
+        {/* Resultados de busca (apenas quando há busca ativa) */}
+        {showResults && (
+          <div style={{ width: '100%', maxWidth: 800, margin: '0 auto', marginTop: 32 }}>
+            {error ? (
+              <ErrorMessage />
+            ) : isLoading ? (
+              <div style={{ textAlign: 'center', color: '#888' }}>Carregando...</div>
+            ) : validatedResults && validatedResults.length > 0 ? (
+              <>
+                <div style={{ marginBottom: 16 }}>
+                  <p style={{ color: '#666', fontSize: 14 }}>
+                    {validatedResults.length} resultado{validatedResults.length !== 1 ? 's' : ''} encontrado{validatedResults.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {validatedResults.map((bizu) => (
+                    <BizuCard
+                      key={bizu.id}
+                      bizu={bizu}
+                      onClick={() => {
+                        setSelectedBizu(bizu);
+                        setShowDetailModal(true);
+                      }}
+                      onLike={handleLike}
+                      onEdit={handleEdit}
+                      canEdit={isAdmin || bizu.author_id === profile?.id}
+                    />
+                  ))}
+                </div>
+                {!showMore && validatedResults.length >= 3 && (
+                  <div style={{ textAlign: 'center', marginTop: 32 }}>
+                    <Button
+                      variant="outline"
+                      className={styles.novoBizuBtn}
+                      onClick={() => setShowMore(true)}
+                    >
+                      Ver mais bizus
+                    </Button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div style={{ textAlign: 'center', padding: 48 }}>
+                <p style={{ color: '#888' }}>
+                  Nenhum bizu encontrado para &quot;{debouncedQuery}&quot;.
+                </p>
+                <p style={{ color: '#bbb', fontSize: 13, marginTop: 8 }}>
+                  Tente usar palavras-chave diferentes ou verifique a ortografia.
                 </p>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {validatedResults.map((bizu) => (
-                  <BizuCard
-                    key={bizu.id}
-                    bizu={bizu}
-                    onClick={() => {
-                      setSelectedBizu(bizu);
-                      setShowDetailModal(true);
-                    }}
-                    onLike={handleLike}
-                    onEdit={handleEdit}
-                    canEdit={isAdmin || bizu.author_id === profile?.id}
-                  />
-                ))}
-              </div>
-              {!showMore && validatedResults.length >= 3 && (
-                <div style={{ textAlign: 'center', marginTop: 32 }}>
-                  <Button
-                    variant="outline"
-                    className={styles.novoBizuBtn}
-                    onClick={() => setShowMore(true)}
-                  >
-                    Ver mais bizus
-                  </Button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div style={{ textAlign: 'center', padding: 48 }}>
-              <p style={{ color: '#888' }}>
-                Nenhum bizu encontrado para &quot;{debouncedQuery}&quot;.
-              </p>
-              <p style={{ color: '#bbb', fontSize: 13, marginTop: 8 }}>
-                Tente usar palavras-chave diferentes ou verifique a ortografia.
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-      
-      {/* Links de rodapé */}
-      <div className={styles.footerLinks}>
-        <a
-          href="https://help.curseduca.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.footerLink}
-        >
-          Help Center
-        </a>
-        <span className={styles.footerSeparator}>•</span>
-        <a
-          href="https://curseduca.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.footerLink}
-        >
-          Curseduca
-        </a>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Modal de detalhes */}
@@ -363,7 +339,7 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
           onSave={handleSaveEdit}
         />
       )}
-    </div>
+    </>
   );
 }
 

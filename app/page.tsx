@@ -8,6 +8,7 @@ import { SearchPage } from '@/components/search-page';
 import { AdminPage } from '@/components/admin-page';
 import { CreateBizuModal } from '@/components/create-bizu-modal';
 import { TopBizusSection } from '@/components/top-bizus-section';
+import { SearchPageFooter } from '@/components/search-page-footer';
 import styles from './page.module.css';
 
 function HomeContent() {
@@ -44,8 +45,14 @@ function HomeContent() {
           <AdminPage />
         ) : (
           <>
+            {/* Container da página de busca */}
             <SearchPage onNovoBizuClick={handleNovoBizuClick} />
+            
+            {/* Container do Top 10 Bizus */}
             <TopBizusSection />
+            
+            {/* Container do Footer */}
+            <SearchPageFooter />
           </>
         )}
       </main>

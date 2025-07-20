@@ -8,8 +8,10 @@ interface BizuDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onEdit?: (bizu: Bizu) => void;
+  onDelete?: (bizuId: string) => void;
   onLike?: (bizuId: string) => void;
   canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 export function BizuDetailModal({ 
@@ -17,8 +19,10 @@ export function BizuDetailModal({
   open, 
   onOpenChange, 
   onEdit, 
+  onDelete, 
   onLike, 
-  canEdit = false 
+  canEdit = false,
+  canDelete = false
 }: BizuDetailModalProps) {
   const [formattedDate, setFormattedDate] = useState('');
 
@@ -47,6 +51,13 @@ export function BizuDetailModal({
     }
   };
 
+  const handleDelete = () => {
+    if (onDelete && bizu && confirm('Tem certeza que deseja apagar este bizu? Esta ação não pode ser desfeita.')) {
+      onDelete(bizu.id);
+      onOpenChange(false);
+    }
+  };
+
   if (!bizu || !open) return null;
 
   return (
@@ -62,6 +73,15 @@ export function BizuDetailModal({
                 title="Editar bizu"
               >
                 ✏️ Editar
+              </button>
+            )}
+            {canDelete && (
+              <button 
+                className={styles.deleteButton}
+                onClick={handleDelete}
+                title="Apagar bizu"
+              >
+                🗑️ Apagar
               </button>
             )}
             <button 

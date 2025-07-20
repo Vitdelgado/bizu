@@ -1,18 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { useBizus } from '@/hooks/use-bizus';
+import { useLikes } from '@/hooks/use-likes';
 import { UserManagement } from './user-management';
 import { BizuCard } from './bizu-card';
+import { EditBizuModal } from './edit-bizu-modal';
+import { Bizu } from './bizu-card';
 import styles from './admin-page.module.css';
 
 type AdminSection = 'usuarios' | 'bizus' | 'auditoria';
 
 export function AdminPage() {
   const { profile, isAdmin, loading } = useAuth();
-  const { bizus, loading: bizusLoading } = useBizus();
+  const { bizus, loading: bizusLoading, updateBizu, deleteBizu, canEdit, canDelete } = useBizus();
+  const { likeBizu, isLiked, getLikeCount, setInitialLikeState } = useLikes();
   const [activeSection, setActiveSection] = useState<AdminSection>('bizus');
+  const [selectedBizu, setSelectedBizu] = useState<Bizu | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   // Mostrar loading enquanto verifica autenticação
   if (loading) {
@@ -49,6 +55,43 @@ export function AdminPage() {
     );
   }
 
+  // Inicializar estado de likes quando bizus carregam
+  useEffect(() => {
+    bizus.forEach(bizu => {
+      setInitialLikeState(bizu.id, bizu.is_liked || false, bizu.likes);
+    });
+  }, [bizus, setInitialLikeState]);
+
+  // Bizus com estado de like atualizado
+  const bizusWithLikes = bizus.map(bizu => ({
+    ...bizu,
+    is_liked: isLiked(bizu.id),
+    likes: getLikeCount(bizu.id) || bizu.likes
+  }));
+
+  const handleEditBizu = (bizu: Bizu) => {
+    setSelectedBizu(bizu);
+    setShowEditModal(true);
+  };
+
+  const handleDeleteBizu = async (bizuId: string) => {
+    try {
+      await deleteBizu(bizuId);
+    } catch (error) {
+      console.error('Erro ao deletar bizu:', error);
+    }
+  };
+
+  const handleSaveBizu = async (bizuId: string, bizuData: Partial<Bizu>) => {
+    await updateBizu(bizuId, bizuData);
+    setShowEditModal(false);
+    setSelectedBizu(null);
+  };
+
+  const handleLike = async (bizuId: string) => {
+    await likeBizu(bizuId);
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case 'usuarios':
@@ -63,14 +106,22 @@ export function AdminPage() {
                 <div className={styles.spinner}></div>
                 <p>Carregando bizus...</p>
               </div>
-            ) : bizus.length === 0 ? (
+            ) : bizusWithLikes.length === 0 ? (
               <div className={styles.emptyState}>
                 <p>Nenhum bizu cadastrado ainda.</p>
               </div>
             ) : (
               <div className={styles.bizusGrid}>
-                {bizus.map((bizu) => (
-                  <BizuCard key={bizu.id} bizu={bizu} />
+                {bizusWithLikes.map((bizu) => (
+                  <BizuCard 
+                    key={bizu.id} 
+                    bizu={bizu}
+                    onLike={handleLike}
+                    onEdit={handleEditBizu}
+                    onDelete={handleDeleteBizu}
+                    canEdit={canEdit(bizu)}
+                    canDelete={canDelete(bizu)}
+                  />
                 ))}
               </div>
             )}
@@ -123,6 +174,16 @@ export function AdminPage() {
       <div className={styles.content}>
         {renderContent()}
       </div>
+
+      {/* Modal de edição */}
+      {showEditModal && selectedBizu && (
+        <EditBizuModal
+          bizu={selectedBizu}
+          open={showEditModal}
+          onOpenChange={setShowEditModal}
+          onSave={handleSaveBizu}
+        />
+      )}
     </div>
   );
 } 

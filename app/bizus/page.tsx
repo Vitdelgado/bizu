@@ -212,8 +212,10 @@ export default function BizusPage() {
           open={showDetailModal}
           onOpenChange={setShowDetailModal}
           onEdit={handleEditBizu}
+          onDelete={handleDeleteBizu}
           onLike={handleLike}
           canEdit={canEdit(selectedBizu)}
+          canDelete={canDelete(selectedBizu)}
         />
       )}
 

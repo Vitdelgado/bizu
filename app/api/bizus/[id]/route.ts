@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+interface BizuUpdateData {
+  title?: string;
+  category?: string;
+  keywords?: string[];
+  content?: string;
+  image_url?: string | null;
+  updated_at: string;
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -41,7 +50,7 @@ export async function PUT(
     }
 
     // Preparar dados para atualização
-    const updateData: any = {
+    const updateData: BizuUpdateData = {
       updated_at: new Date().toISOString()
     };
 

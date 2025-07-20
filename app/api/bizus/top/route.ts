@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const userId = searchParams.get('userId');
 
     // Buscar top bizus por likes
-    let query = supabase
+    const query = supabase
       .from('bizus')
       .select(`
         id,

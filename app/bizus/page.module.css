@@ -1,6 +1,7 @@
 .container {
   min-height: 100vh;
   background: #f8fafc;
+  padding-top: 70px; /* Espaço para o header fixo */
   padding-bottom: 2rem;
 }
 

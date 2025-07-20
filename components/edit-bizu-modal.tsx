@@ -109,21 +109,21 @@ export function EditBizuModal({ bizu, open, onOpenChange, onSave }: EditBizuModa
               <option value="Financeiro">Financeiro</option>
               <option value="Gerenciamento de Membros">Gerenciamento de Membros</option>
               <option value="Experiência do Usuário">Experiência do Usuário</option>
-              <option value="Integrações / Personalização">Integrações / Personalização</option>
+              <option value="Integrações, Personalização">Integrações, Personalização</option>
               <option value="Inteligência Artificial">Inteligência Artificial</option>
-              <option value="Produto / Página">Produto / Página</option>
+              <option value="Produto, Página">Produto, Página</option>
               <option value="Certificados">Certificados</option>
-              <option value="Equipe / Suporte Interno">Equipe / Suporte Interno</option>
-              <option value="Gamificação / Suporte">Gamificação / Suporte</option>
-              <option value="Certificados / App">Certificados / App</option>
-              <option value="Cancelamento / Suporte Comercial">Cancelamento / Suporte Comercial</option>
-              <option value="Integrações / Técnicas">Integrações / Técnicas</option>
-              <option value="Conteúdo / Produto">Conteúdo / Produto</option>
-              <option value="Integrações / Front-end">Integrações / Front-end</option>
-              <option value="Atendimento / Comunicação">Atendimento / Comunicação</option>
-              <option value="Suporte Avançado / Técnico">Suporte Avançado / Técnico</option>
-              <option value="Personalização / Interface">Personalização / Interface</option>
-              <option value="Personalização / Técnico">Personalização / Técnico</option>
+              <option value="Equipe, Suporte Interno">Equipe, Suporte Interno</option>
+              <option value="Gamificação, Suporte">Gamificação, Suporte</option>
+              <option value="Certificados, App">Certificados, App</option>
+              <option value="Cancelamento, Suporte Comercial">Cancelamento, Suporte Comercial</option>
+              <option value="Integrações, Técnicas">Integrações, Técnicas</option>
+              <option value="Conteúdo, Produto">Conteúdo, Produto</option>
+              <option value="Integrações, Front-end">Integrações, Front-end</option>
+              <option value="Atendimento, Comunicação">Atendimento, Comunicação</option>
+              <option value="Suporte Avançado, Técnico">Suporte Avançado, Técnico</option>
+              <option value="Personalização, Interface">Personalização, Interface</option>
+              <option value="Personalização, Técnico">Personalização, Técnico</option>
             </select>
           </div>
 

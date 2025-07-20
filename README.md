@@ -156,4 +156,4 @@ Pull requests e sugestões são bem-vindos! Sinta-se à vontade para abrir issue
 
 ---
 
-**Desenvolvido com ❤️ para o time de suporte da Curseduca**
+**Desenvolvido por Vitória Delgado com ❤️ para o time de suporte da Curseduca**

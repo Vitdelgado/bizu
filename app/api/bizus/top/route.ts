@@ -60,28 +60,45 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
     }
 
-    // Se há um usuário logado, verificar quais bizus ele curtiu
-    if (userId && bizus && bizus.length > 0) {
-      const bizuIds = bizus.map(b => b.id);
-      
-      const { data: userLikes } = await supabase
-        .from('bizu_likes')
-        .select('bizu_id')
-        .eq('user_id', userId)
-        .in('bizu_id', bizuIds);
-
-      const likedBizuIds = new Set(userLikes?.map(like => like.bizu_id) || []);
-
-      // Adicionar flag is_liked para cada bizu
-      const bizusWithLikes = bizus.map(bizu => ({
-        ...bizu,
-        is_liked: likedBizuIds.has(bizu.id)
-      }));
-
-      return NextResponse.json(bizusWithLikes);
+    // Se não há bizus, retornar array vazio
+    if (!bizus || bizus.length === 0) {
+      return NextResponse.json([]);
     }
 
-    return NextResponse.json(bizus || []);
+    // Se há um usuário logado, verificar quais bizus ele curtiu
+    if (userId) {
+      try {
+        const bizuIds = bizus.map(b => b.id);
+        
+        const { data: userLikes, error: likesError } = await supabase
+          .from('bizu_likes')
+          .select('bizu_id')
+          .eq('user_id', userId)
+          .in('bizu_id', bizuIds);
+
+        if (likesError) {
+          console.warn('Erro ao buscar likes do usuário:', likesError);
+          // Se não conseguir buscar likes, retornar bizus sem flag de like
+          return NextResponse.json(bizus);
+        }
+
+        const likedBizuIds = new Set(userLikes?.map(like => like.bizu_id) || []);
+
+        // Adicionar flag is_liked para cada bizu
+        const bizusWithLikes = bizus.map(bizu => ({
+          ...bizu,
+          is_liked: likedBizuIds.has(bizu.id)
+        }));
+
+        return NextResponse.json(bizusWithLikes);
+      } catch (likesError) {
+        console.warn('Erro ao processar likes:', likesError);
+        // Se houver erro ao processar likes, retornar bizus sem flag
+        return NextResponse.json(bizus);
+      }
+    }
+
+    return NextResponse.json(bizus);
   } catch (error) {
     console.error('Erro na API de top bizus:', error);
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });

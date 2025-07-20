@@ -43,7 +43,7 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
   }, [debouncedQuery]);
 
   const { data: searchResults, isLoading: searchLoading, error: searchError } = useQuery<Bizu[]>({
-    queryKey: ['/api/bizus/search', { q: debouncedQuery, limit: showMore ? 20 : 3 }],
+    queryKey: ['/api/bizus', { q: debouncedQuery, limit: showMore ? 20 : 3 }],
     enabled: debouncedQuery.trim().length > 2,
   });
 
@@ -61,6 +61,21 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
   
   // Fallback defensivo para evitar erro React #130
   const safeDisplayResults = Array.isArray(displayResults) ? displayResults : [];
+  
+  // Garantir que todos os bizus tenham as propriedades necessárias
+  const validatedResults = safeDisplayResults.map(bizu => ({
+    id: bizu.id || '',
+    title: bizu.title || '',
+    category: bizu.category || '',
+    keywords: Array.isArray(bizu.keywords) ? bizu.keywords : [],
+    content: bizu.content || '',
+    image_url: bizu.image_url || null,
+    views: typeof bizu.views === 'number' ? bizu.views : 0,
+    likes: typeof bizu.likes === 'number' ? bizu.likes : 0,
+    created_at: bizu.created_at || new Date().toISOString(),
+    author_id: bizu.author_id || '',
+    is_liked: typeof bizu.is_liked === 'boolean' ? bizu.is_liked : false,
+  }));
 
   // Mutations para like/unlike
   const likeMutation = useMutation({
@@ -141,7 +156,7 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
       return;
     }
 
-    const bizu = safeDisplayResults.find(b => b.id === bizuId);
+    const bizu = validatedResults.find(b => b.id === bizuId);
     if (bizu?.is_liked) {
       unlikeMutation.mutate(bizuId);
     } else {
@@ -260,17 +275,17 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
           <ErrorMessage />
         ) : isLoading ? (
           <div style={{ textAlign: 'center', color: '#888' }}>Carregando...</div>
-        ) : safeDisplayResults && safeDisplayResults.length > 0 ? (
+        ) : validatedResults && validatedResults.length > 0 ? (
           <>
             {showResults && (
               <div style={{ marginBottom: 16 }}>
                 <p style={{ color: '#666', fontSize: 14 }}>
-                  {safeDisplayResults.length} resultado{safeDisplayResults.length !== 1 ? 's' : ''} encontrado{safeDisplayResults.length !== 1 ? 's' : ''}
+                  {validatedResults.length} resultado{validatedResults.length !== 1 ? 's' : ''} encontrado{validatedResults.length !== 1 ? 's' : ''}
                 </p>
               </div>
             )}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {safeDisplayResults.map((bizu) => (
+              {validatedResults.map((bizu) => (
                 <BizuCard
                   key={bizu.id}
                   bizu={bizu}
@@ -284,7 +299,7 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
                 />
               ))}
             </div>
-            {showResults && !showMore && safeDisplayResults.length >= 3 && (
+            {showResults && !showMore && validatedResults.length >= 3 && (
               <div style={{ textAlign: 'center', marginTop: 32 }}>
                 <Button
                   variant="outline"

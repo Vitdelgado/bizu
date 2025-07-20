@@ -101,7 +101,10 @@ export function BizuCard({ bizu, onClick, onLike, onEdit, canEdit = false }: Biz
               onClick={handleLike}
               title={bizu.is_liked ? 'Descurtir' : 'Curtir'}
             >
-              {bizu.is_liked ? '❤️' : '🤍'} {bizu.likes}
+              <span className={styles.heartIcon}>
+                {bizu.is_liked ? '❤️' : '🤍'}
+              </span>
+              {bizu.likes}
             </button>
           </div>
         </div>

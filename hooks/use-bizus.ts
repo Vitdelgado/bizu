@@ -223,28 +223,28 @@ export function useBizus(): UseBizusReturn {
         throw new Error('Sem permissão para editar este bizu');
       }
 
-      const { data, error } = await supabase
-        .from('bizus')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        throw error;
+      // Obter token de sessão
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('Token de sessão não encontrado');
       }
 
-      // Registrar edição se não for o autor
-      if (profile && bizu.author_id !== profile.id) {
-        await supabase.rpc('log_bizu_edit', {
-          p_bizu_id: id,
-          p_editor_id: profile.id,
-          p_changes: { updates }
-        });
+      // Fazer requisição para a API com token
+      const response = await fetch(`/api/bizus/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao atualizar bizu');
       }
+
+      const data = await response.json();
 
       // Atualizar estado local
       setBizus(prev => prev.map(b => b.id === id ? data : b));

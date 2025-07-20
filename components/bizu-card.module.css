@@ -123,27 +123,48 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px 8px;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  color: #6b7280;
-  transition: all 0.2s;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 16px;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  color: #666;
+  font-weight: 500;
 }
 
 .likeButton:hover {
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: #f0f0f0;
+  transform: scale(1.05);
 }
 
 .likeButton.liked {
-  color: #dc2626;
+  color: #e74c3c;
+  background-color: #fdf2f2;
 }
 
 .likeButton.liked:hover {
-  background-color: #fef2f2;
+  background-color: #fce8e8;
+}
+
+.likeButton .heartIcon {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.likeButton:hover .heartIcon {
+  transform: scale(1.2);
+}
+
+.likeButton.liked .heartIcon {
+  animation: heartBeat 0.3s ease;
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
 }
 
 @media (max-width: 640px) {

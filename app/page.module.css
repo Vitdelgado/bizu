@@ -37,8 +37,8 @@
 
 /* Conteúdo Principal */
 .mainContent {
+  flex: 1;
   padding-top: 10%; /* Espaço entre o título e cabeçalho até 1366px */
-  min-height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,6 +47,7 @@
   padding-right: 2rem;
   width: 85%;
   margin: 0 auto;
+  padding-bottom: 2rem; /* Espaço antes do rodapé */
 }
 
 /* Para telas maiores que 1366px */

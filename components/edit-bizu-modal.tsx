@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import styles from './edit-bizu-modal.module.css';
 import { Bizu } from './bizu-card';
+import { CategoryInput } from './category-input';
 
 interface EditBizuModalProps {
   bizu: Bizu | null;
@@ -97,18 +98,12 @@ export function EditBizuModal({ bizu, open, onOpenChange, onSave }: EditBizuModa
 
           <div className={styles.field}>
             <label htmlFor="category">Categoria *</label>
-            <input
-              id="category"
-              type="text"
+            <CategoryInput
               value={formData.category}
-              onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+              onChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
               placeholder="Ex: Suporte, Financeiro, Certificados"
-              required
-              className={styles.input}
+              className={styles.categoryInput}
             />
-            <small className={styles.helpText}>
-              Separe múltiplas categorias por vírgula
-            </small>
           </div>
 
           <div className={styles.field}>

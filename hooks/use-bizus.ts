@@ -13,6 +13,8 @@ interface Bizu {
   created_at: string;
   updated_at?: string;
   views: number;
+  likes: number;
+  is_liked?: boolean;
 }
 
 interface UseBizusReturn {

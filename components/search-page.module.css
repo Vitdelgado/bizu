@@ -136,6 +136,13 @@
   color: #1f2937;
 }
 
+/* Seção do Top 10 Bizus */
+.topBizusSection {
+  width: 100%;
+  margin: 2rem 0;
+  padding: 0 1rem;
+}
+
 /* Links de rodapé */
 .footerLinks {
   display: flex;

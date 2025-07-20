@@ -71,6 +71,9 @@ export async function GET(req: NextRequest) {
 
     const { data, error } = await query;
     
+    // Cache mais curto para listas que podem mudar frequentemente
+    const cacheTime = q ? 60 : 300; // 1 min para buscas, 5 min para listas
+    
     // Se há usuário logado, verificar likes
     if (user && data && data.length > 0) {
       const bizuIds = data.map(b => b.id);
@@ -97,9 +100,6 @@ export async function GET(req: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    
-    // Cache mais curto para listas que podem mudar frequentemente
-    const cacheTime = q ? 60 : 300; // 1 min para buscas, 5 min para listas
     
     return NextResponse.json(data, {
       headers: getCacheHeaders(cacheTime),

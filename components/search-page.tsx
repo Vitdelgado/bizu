@@ -69,7 +69,7 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
     category: bizu.category || '',
     keywords: Array.isArray(bizu.keywords) ? bizu.keywords : [],
     content: bizu.content || '',
-    image_url: bizu.image_url || null,
+    image_url: bizu.image_url || undefined, // Converter null para undefined
     views: typeof bizu.views === 'number' ? bizu.views : 0,
     likes: typeof bizu.likes === 'number' ? bizu.likes : 0,
     created_at: bizu.created_at || new Date().toISOString(),

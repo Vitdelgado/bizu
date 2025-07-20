@@ -7,6 +7,7 @@ import { AuthModal } from '@/components/auth-modal';
 import { SearchPage } from '@/components/search-page';
 import { AdminPage } from '@/components/admin-page';
 import { CreateBizuModal } from '@/components/create-bizu-modal';
+import { TopBizusSection } from '@/components/top-bizus-section';
 import styles from './page.module.css';
 
 function HomeContent() {
@@ -42,7 +43,10 @@ function HomeContent() {
         {showAdmin && isAdmin ? (
           <AdminPage />
         ) : (
-          <SearchPage onNovoBizuClick={handleNovoBizuClick} />
+          <>
+            <SearchPage onNovoBizuClick={handleNovoBizuClick} />
+            <TopBizusSection />
+          </>
         )}
       </main>
 

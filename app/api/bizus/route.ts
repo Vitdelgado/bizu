@@ -56,6 +56,9 @@ export async function GET(req: NextRequest) {
       });
     }
 
+    // Verificar se há usuário autenticado
+    const { data: { user } } = await supabase.auth.getUser();
+    
     let query = supabase
       .from('bizus')
       .select('*')
@@ -67,6 +70,29 @@ export async function GET(req: NextRequest) {
     }
 
     const { data, error } = await query;
+    
+    // Se há usuário logado, verificar likes
+    if (user && data && data.length > 0) {
+      const bizuIds = data.map(b => b.id);
+      
+      const { data: userLikes } = await supabase
+        .from('bizu_likes')
+        .select('bizu_id')
+        .eq('user_id', user.id)
+        .in('bizu_id', bizuIds);
+
+      const likedBizuIds = new Set(userLikes?.map(like => like.bizu_id) || []);
+
+      // Adicionar flag is_liked para cada bizu
+      const bizusWithLikes = data.map(bizu => ({
+        ...bizu,
+        is_liked: likedBizuIds.has(bizu.id)
+      }));
+
+      return NextResponse.json(bizusWithLikes, {
+        headers: getCacheHeaders(cacheTime),
+      });
+    }
     
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

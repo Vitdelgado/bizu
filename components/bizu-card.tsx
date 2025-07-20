@@ -9,16 +9,21 @@ export interface Bizu {
   content: string;
   image_url?: string;
   views: number;
+  likes: number;
   created_at: string;
   author_id: string;
+  is_liked?: boolean;
 }
 
 interface BizuCardProps {
   bizu: Bizu;
   onClick?: () => void;
+  onLike?: (bizuId: string) => void;
+  onEdit?: (bizu: Bizu) => void;
+  canEdit?: boolean;
 }
 
-export function BizuCard({ bizu, onClick }: BizuCardProps) {
+export function BizuCard({ bizu, onClick, onLike, onEdit, canEdit = false }: BizuCardProps) {
   const [dateText, setDateText] = useState('');
 
   useEffect(() => {
@@ -40,9 +45,24 @@ export function BizuCard({ bizu, onClick }: BizuCardProps) {
     return content.substring(0, maxLength) + '...';
   };
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (onClick) {
       onClick();
+    }
+  };
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onLike) {
+      onLike(bizu.id);
+    }
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(bizu);
     }
   };
 
@@ -54,7 +74,18 @@ export function BizuCard({ bizu, onClick }: BizuCardProps) {
             <h3 className={styles.title}>{bizu.title}</h3>
             <span className={styles.badge}>{bizu.category}</span>
           </div>
-          <span className={styles.views}>{bizu.views} visualizações</span>
+          <div className={styles.headerRight}>
+            <span className={styles.views}>{bizu.views} visualizações</span>
+            {canEdit && (
+              <button 
+                className={styles.editButton}
+                onClick={handleEdit}
+                title="Editar bizu"
+              >
+                ✏️
+              </button>
+            )}
+          </div>
         </div>
         <p className={styles.preview}>{getPreview(bizu.content)}</p>
         <div className={styles.keywordsRow}>
@@ -63,7 +94,16 @@ export function BizuCard({ bizu, onClick }: BizuCardProps) {
           ))}
         </div>
         <div className={styles.footerRow}>
-          <span>{dateText}</span>
+          <span className={styles.date}>{dateText}</span>
+          <div className={styles.actions}>
+            <button 
+              className={`${styles.likeButton} ${bizu.is_liked ? styles.liked : ''}`}
+              onClick={handleLike}
+              title={bizu.is_liked ? 'Descurtir' : 'Curtir'}
+            >
+              {bizu.is_liked ? '❤️' : '🤍'} {bizu.likes}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import styles from './search-page.module.css';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from './ui/button';
 import { Bizu, BizuCard } from './bizu-card';
 import { BizuDetailModal } from './bizu-detail-modal';
+import { EditBizuModal } from './edit-bizu-modal';
+import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 
 interface SearchPageProps {
@@ -11,12 +14,18 @@ interface SearchPageProps {
 }
 
 function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
+  const { profile, isAdmin } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [selectedBizu, setSelectedBizu] = useState<Bizu | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [editingBizu, setEditingBizu] = useState<Bizu | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -53,6 +62,63 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
   // Fallback defensivo para evitar erro React #130
   const safeDisplayResults = Array.isArray(displayResults) ? displayResults : [];
 
+  // Mutations para like/unlike
+  const likeMutation = useMutation({
+    mutationFn: async (bizuId: string) => {
+      const response = await fetch(`/api/bizus/${bizuId}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error('Erro ao curtir bizu');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bizus'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/bizus/top'] });
+    },
+  });
+
+  const unlikeMutation = useMutation({
+    mutationFn: async (bizuId: string) => {
+      const response = await fetch(`/api/bizus/${bizuId}/like`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error('Erro ao descurtir bizu');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bizus'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/bizus/top'] });
+    },
+  });
+
+  // Mutation para edição
+  const editMutation = useMutation({
+    mutationFn: async ({ bizuId, bizuData }: { bizuId: string; bizuData: Partial<Bizu> }) => {
+      const response = await fetch(`/api/bizus/${bizuId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bizuData),
+      });
+      if (!response.ok) throw new Error('Erro ao editar bizu');
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({ title: 'Sucesso', description: 'Bizu editado com sucesso!' });
+      queryClient.invalidateQueries({ queryKey: ['/api/bizus'] });
+      setShowEditModal(false);
+      setEditingBizu(null);
+    },
+    onError: (error) => {
+      toast({ 
+        title: 'Erro', 
+        description: error instanceof Error ? error.message : 'Erro ao editar bizu',
+        variant: 'destructive'
+      });
+    },
+  });
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -63,6 +129,52 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
+  };
+
+  const handleLike = (bizuId: string) => {
+    if (!profile) {
+      toast({ 
+        title: 'Ação necessária', 
+        description: 'Faça login para curtir bizus',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    const bizu = safeDisplayResults.find(b => b.id === bizuId);
+    if (bizu?.is_liked) {
+      unlikeMutation.mutate(bizuId);
+    } else {
+      likeMutation.mutate(bizuId);
+    }
+  };
+
+  const handleEdit = (bizu: Bizu) => {
+    if (!profile) {
+      toast({ 
+        title: 'Ação necessária', 
+        description: 'Faça login para editar bizus',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    const canEdit = isAdmin || bizu.author_id === profile.id;
+    if (!canEdit) {
+      toast({ 
+        title: 'Sem permissão', 
+        description: 'Você só pode editar seus próprios bizus',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setEditingBizu(bizu);
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = async (bizuId: string, bizuData: Partial<Bizu>) => {
+    editMutation.mutate({ bizuId, bizuData });
   };
 
   // Componente de erro
@@ -166,6 +278,9 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
                     setSelectedBizu(bizu);
                     setShowDetailModal(true);
                   }}
+                  onLike={handleLike}
+                  onEdit={handleEdit}
+                  canEdit={isAdmin || bizu.author_id === profile?.id}
                 />
               ))}
             </div>
@@ -201,25 +316,35 @@ function SearchPageContent({ onNovoBizuClick }: SearchPageProps) {
           rel="noopener noreferrer"
           className={styles.footerLink}
         >
-          Help Curseduca
+          Help Center
         </a>
         <span className={styles.footerSeparator}>•</span>
         <a
-          href="https://treinamento.curseduca.com"
+          href="https://curseduca.com"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.footerLink}
         >
-          Treinamento de Suporte
+          Curseduca
         </a>
       </div>
 
       {/* Modal de detalhes */}
-      {showDetailModal && selectedBizu && (
+      {showDetailModal && (
         <BizuDetailModal
           bizu={selectedBizu}
           open={showDetailModal}
           onOpenChange={setShowDetailModal}
+        />
+      )}
+
+      {/* Modal de edição */}
+      {showEditModal && (
+        <EditBizuModal
+          bizu={editingBizu}
+          open={showEditModal}
+          onOpenChange={setShowEditModal}
+          onSave={handleSaveEdit}
         />
       )}
     </div>

@@ -12,16 +12,17 @@ interface BizuUpdateData {
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: bizuId } = await params;
+    
     // Verificar autenticação
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    const bizuId = params.id;
     const body = await request.json();
     
     // Verificar se o bizu existe
@@ -91,16 +92,16 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: bizuId } = await params;
+    
     // Verificar autenticação
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
-
-    const bizuId = params.id;
     
     // Verificar se o bizu existe
     const { data: existingBizu, error: fetchError } = await supabase

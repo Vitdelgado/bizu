@@ -1,5 +1,5 @@
 -- =====================================================
--- SINCRONIZAÇÃO COMPATÍVEL - SEM CONFLITOS
+-- 04 - SINCRONIZAÇÃO USERS ↔ AUTH (QUARTO A EXECUTAR)
 -- =====================================================
 
 -- 1. VERIFICAÇÃO PRÉVIA
@@ -18,7 +18,7 @@ ORDER BY trigger_name;
 CREATE TABLE IF NOT EXISTS users_backup_sync AS 
 SELECT * FROM public.users;
 
--- 3. SINCRONIZAÇÃO INICIAL DOS DADOS (SEM CONFLITAR)
+-- 3. SINCRONIZAÇÃO INICIAL DOS DADOS
 -- Atualizar raw_user_meta_data no Auth com dados da tabela users
 UPDATE auth.users 
 SET 
@@ -91,36 +91,7 @@ WHERE trigger_schema IN ('auth', 'public')
 AND trigger_name IN ('on_auth_user_created', 'sync_users_to_auth_metadata_trigger')
 ORDER BY trigger_name;
 
--- Verificar se as funções foram criadas/modificadas
-SELECT 
-    'FUNÇÕES FINAIS' as status,
-    routine_name,
-    routine_type
-FROM information_schema.routines 
-WHERE routine_name IN ('handle_new_user', 'sync_users_to_auth_metadata')
-AND routine_schema = 'public'
-ORDER BY routine_name;
-
--- 8. TESTE DE SINCRONIZAÇÃO (OPCIONAL)
--- Descomente para testar:
-/*
--- Teste 1: Atualizar name na tabela users
-UPDATE public.users SET name = 'Tektus Teste' WHERE email = 'agenciatektus@gmail.com';
-
--- Teste 2: Verificar se raw_user_meta_data foi atualizado no Auth
-SELECT 
-    au.email,
-    au.raw_user_meta_data->>'name' as auth_name,
-    pu.name as public_name
-FROM auth.users au
-INNER JOIN public.users pu ON au.id = pu.id
-WHERE au.email = 'agenciatektus@gmail.com';
-
--- Teste 3: Reverter o teste
-UPDATE public.users SET name = 'Tektus' WHERE email = 'agenciatektus@gmail.com';
-*/
-
--- 9. VERIFICAÇÃO FINAL
+-- 8. VERIFICAÇÃO FINAL
 SELECT 
     'RESULTADO FINAL' as status,
     au.id,
@@ -133,8 +104,4 @@ SELECT
     END as status_sync
 FROM auth.users au
 INNER JOIN public.users pu ON au.id = pu.id
-ORDER BY au.email;
-
--- 10. LIMPEZA (OPCIONAL)
--- Remover tabela de backup se não precisar mais
--- DROP TABLE IF EXISTS users_backup_sync; 
+ORDER BY au.email; 

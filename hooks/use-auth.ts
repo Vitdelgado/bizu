@@ -37,10 +37,18 @@ export function useAuth() {
   useEffect(() => {
     let mounted = true;
 
+    // Timeout de segurança para evitar loading infinito
+    const timeoutId = setTimeout(() => {
+      if (mounted) {
+        console.warn('⚠️ Timeout de segurança: forçando loading = false');
+        setAuthState(prev => ({ ...prev, loading: false }));
+      }
+    }, 10000); // 10 segundos
+
     // Verificar sessão inicial
-    const checkSession = async () => {
+    const checkSession = async (retryCount = 0) => {
       try {
-        console.log('🔐 Verificando sessão inicial...');
+        console.log(`🔐 Verificando sessão inicial... (tentativa ${retryCount + 1})`);
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -63,7 +71,12 @@ export function useAuth() {
         }
       } catch (error) {
         console.error('❌ Erro ao verificar sessão:', error);
-        if (mounted) {
+        
+        // Retry até 3 vezes em caso de erro de rede
+        if (retryCount < 3 && mounted) {
+          console.log(`🔄 Tentando novamente em 1 segundo... (${retryCount + 1}/3)`);
+          setTimeout(() => checkSession(retryCount + 1), 1000);
+        } else if (mounted) {
           setAuthState(prev => ({ ...prev, loading: false }));
         }
       }
@@ -97,6 +110,7 @@ export function useAuth() {
 
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
   }, []);
@@ -112,7 +126,13 @@ export function useAuth() {
 
       if (error) {
         console.error('❌ Erro ao buscar perfil:', error);
-        setAuthState(prev => ({ ...prev, loading: false }));
+        setAuthState(prev => ({ 
+          ...prev, 
+          profile: null,
+          loading: false,
+          isAdmin: false,
+          isSuporte: false
+        }));
         return;
       }
 
@@ -126,7 +146,13 @@ export function useAuth() {
       }));
     } catch (error) {
       console.error('❌ Erro ao buscar perfil:', error);
-      setAuthState(prev => ({ ...prev, loading: false }));
+      setAuthState(prev => ({ 
+        ...prev, 
+        profile: null,
+        loading: false,
+        isAdmin: false,
+        isSuporte: false
+      }));
     }
   };
 

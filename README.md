@@ -105,18 +105,25 @@ Inspirada visualmente na simplicidade da tela do Google, é um **mini Help inter
 ### 1. Configurar Supabase
 - Crie um projeto no [Supabase](https://supabase.com)
 - Execute os scripts SQL em `/supabase-sql` na ordem:
-  1. `01_schema.sql`
-  2. `02_triggers.sql`
-  3. `03_rls.sql`
-  4. `04_functions.sql`
-- Crie o usuário super admin (Tektus) no painel Auth e promova com o script `05_superadmin.sql`
+  1. `00_cleanup_conflicts.sql` - Limpeza de conflitos
+  2. `01_schema_initial.sql` - Schema inicial
+  3. `02_triggers_and_functions.sql` - Triggers e funções
+  4. `03_rls_policies.sql` - Políticas de segurança
+  5. `04_sync_users_auth.sql` - Sincronização Auth ↔ Users
+  6. `05_admin_setup.sql` - Configuração de admin
+- **Importante**: Execute na ordem exata para evitar conflitos
 
 ### 2. Configurar variáveis de ambiente
-Crie um arquivo `.env.local`:
+Crie um arquivo `.env.local` na raiz do projeto:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima
 ```
+
+**Para obter essas informações:**
+1. Acesse [Supabase](https://supabase.com) → Seu Projeto → Settings → API
+2. Copie a "Project URL" para `NEXT_PUBLIC_SUPABASE_URL`
+3. Copie a "anon public" para `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 ### 3. Instalar dependências
 ```bash
@@ -131,25 +138,69 @@ npm run dev
 ### 5. Importar bizus (opcional)
 - Use o script `scripts/import-bizus.js` ou o painel do Supabase
 
+### 6. Deploy no Vercel (opcional)
+Para fazer deploy no Vercel:
+1. Conecte seu repositório GitHub ao Vercel
+2. Configure as variáveis de ambiente no Vercel:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. O deploy será automático a cada push
+
 ---
 
 ## 🖥️ Telas do Sistema
 
-- **Tela Principal**: Busca estilo Google, cards de bizus, links úteis
+- **Tela Principal**: Busca estilo Google, Top 10 bizus, resultados de busca
 - **Tela de Administração**: CRUD de bizus, gestão de usuários (apenas admin)
 - **Modal de Autenticação**: Login/cadastro integrado
+- **Página de Bizus**: Lista completa com filtros e estatísticas
+- **Modais**: Detalhes, edição e criação de bizus
 
 ---
 
-## 📈 Futuro do Projeto
+## 📈 Funcionalidades Implementadas
+- ✅ Busca instantânea por título, categoria e conteúdo
+- ✅ Sistema de likes/favoritos
+- ✅ Top 10 bizus mais curtidos
+- ✅ CRUD completo de bizus
+- ✅ Gestão de usuários e roles
+- ✅ Sistema de auditoria e logs
+- ✅ Autenticação integrada com Supabase
+- ✅ Layout responsivo para mobile e desktop
+
+## 🚀 Futuro do Projeto
 - Busca por relevância (text search avançado)
-- Curtir bizus / marcar como favorito
 - Comentários entre membros
 - Exportar como PDF
 - IA interna para sugerir bizus baseados na busca
 - Integração futura com o Zendesk
+- Notificações em tempo real
 
 ---
+
+## 🔧 Troubleshooting
+
+### Problemas Comuns
+
+#### **Loading Infinito**
+- **Causa**: Variáveis de ambiente não configuradas
+- **Solução**: Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+#### **Erro de Build no Vercel**
+- **Causa**: Variáveis de ambiente faltando no Vercel
+- **Solução**: Configure as variáveis no dashboard do Vercel
+
+#### **Erro de Autenticação**
+- **Causa**: Scripts SQL não executados na ordem correta
+- **Solução**: Execute os scripts na ordem: 00 → 01 → 02 → 03 → 04 → 05
+
+#### **Problemas de Sincronização**
+- **Causa**: Triggers conflitantes
+- **Solução**: Execute `00_cleanup_conflicts.sql` primeiro
+
+### Scripts de Verificação
+- `scripts/check-vercel-env.js` - Verifica variáveis de ambiente
+- `supabase-sql/check_current_state.sql` - Verifica estado do banco
 
 ## 💡 Contribua
 Pull requests e sugestões são bem-vindos! Sinta-se à vontade para abrir issues.

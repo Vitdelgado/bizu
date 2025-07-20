@@ -22,13 +22,103 @@
   position: relative;
 }
 .header {
-  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
 }
+
 .title {
-  font-size: 2rem;
-  color: #2563eb;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  flex: 1;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.editButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.editButton:hover {
+  background: #2563eb;
+}
+
+.likeButton {
+  background: none;
+  border: 2px solid #e5e7eb;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+}
+
+.likeButton:hover {
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+  transform: scale(1.05);
+}
+
+.likeButton.liked {
+  color: #e74c3c;
+  border-color: #e74c3c;
+  background-color: #fdf2f2;
+}
+
+.likeButton.liked:hover {
+  background-color: #fce8e8;
+}
+
+.heartIcon {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.likeButton:hover .heartIcon {
+  transform: scale(1.2);
+}
+
+.likeButton.liked .heartIcon {
+  animation: heartBeat 0.3s ease;
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
 }
 .metaRow {
   display: flex;

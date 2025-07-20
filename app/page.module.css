@@ -48,6 +48,7 @@
   width: 85%;
   margin: 0 auto;
   padding-bottom: 2rem; /* Espaço antes do rodapé */
+  gap: 2rem; /* Espaço entre seções */
 }
 
 /* Para telas maiores que 1366px */

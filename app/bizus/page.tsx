@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { useBizus } from '@/hooks/use-bizus';
+import { useLikes } from '@/hooks/use-likes';
 import { BizuCard } from '@/components/bizu-card';
 import { BizuDetailModal } from '@/components/bizu-detail-modal';
 import { CreateBizuModal } from '@/components/create-bizu-modal';
@@ -15,12 +16,20 @@ import styles from './page.module.css';
 export default function BizusPage() {
   const { profile, loading } = useAuth();
   const { bizus, loading: bizusLoading, updateBizu, canEdit } = useBizus();
+  const { likeBizu, isLiked, getLikeCount, setInitialLikeState } = useLikes();
   const [selectedBizu, setSelectedBizu] = useState<Bizu | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showCreateBizuModal, setShowCreateBizuModal] = useState(false);
   const [showEditBizuModal, setShowEditBizuModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Inicializar estado de likes quando bizus carregam
+  useEffect(() => {
+    bizus.forEach(bizu => {
+      setInitialLikeState(bizu.id, bizu.is_liked || false, bizu.likes);
+    });
+  }, [bizus, setInitialLikeState]);
 
   // Filtrar bizus baseado na busca
   const filteredBizus = bizus.filter(bizu =>
@@ -31,6 +40,13 @@ export default function BizusPage() {
       keyword.toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
+
+  // Bizus com estado de like atualizado
+  const bizusWithLikes = filteredBizus.map(bizu => ({
+    ...bizu,
+    is_liked: isLiked(bizu.id),
+    likes: getLikeCount(bizu.id) || bizu.likes
+  }));
 
   const handleNovoBizuClick = () => {
     if (profile) {
@@ -54,8 +70,7 @@ export default function BizusPage() {
   };
 
   const handleLike = async (bizuId: string) => {
-    // Implementar lógica de like se necessário
-    console.log('Like clicked for bizu:', bizuId);
+    await likeBizu(bizuId);
   };
 
   if (loading) {
@@ -111,7 +126,7 @@ export default function BizusPage() {
       {/* Estatísticas */}
       <div className={styles.stats}>
         <div className={styles.statItem}>
-          <span className={styles.statNumber}>{filteredBizus.length}</span>
+          <span className={styles.statNumber}>{bizusWithLikes.length}</span>
           <span className={styles.statLabel}>Bizus encontrados</span>
         </div>
         <div className={styles.statItem}>
@@ -127,9 +142,9 @@ export default function BizusPage() {
             <div className={styles.spinner}></div>
             <p>Carregando bizus...</p>
           </div>
-        ) : filteredBizus.length > 0 ? (
+        ) : bizusWithLikes.length > 0 ? (
           <div className={styles.bizusGrid}>
-            {filteredBizus.map((bizu) => (
+            {bizusWithLikes.map((bizu) => (
               <BizuCard
                 key={bizu.id}
                 bizu={bizu}
@@ -180,6 +195,9 @@ export default function BizusPage() {
           bizu={selectedBizu}
           open={showDetailModal}
           onOpenChange={setShowDetailModal}
+          onEdit={handleEditBizu}
+          onLike={handleLike}
+          canEdit={canEdit(selectedBizu)}
         />
       )}
 

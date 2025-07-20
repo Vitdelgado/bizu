@@ -7,9 +7,19 @@ interface BizuDetailModalProps {
   bizu: Bizu | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onEdit?: (bizu: Bizu) => void;
+  onLike?: (bizuId: string) => void;
+  canEdit?: boolean;
 }
 
-export function BizuDetailModal({ bizu, open, onOpenChange }: BizuDetailModalProps) {
+export function BizuDetailModal({ 
+  bizu, 
+  open, 
+  onOpenChange, 
+  onEdit, 
+  onLike, 
+  canEdit = false 
+}: BizuDetailModalProps) {
   const [formattedDate, setFormattedDate] = useState('');
 
   useEffect(() => {
@@ -24,6 +34,19 @@ export function BizuDetailModal({ bizu, open, onOpenChange }: BizuDetailModalPro
     }
   }, [bizu?.created_at, open]);
 
+  const handleEdit = () => {
+    if (onEdit && bizu) {
+      onEdit(bizu);
+      onOpenChange(false);
+    }
+  };
+
+  const handleLike = () => {
+    if (onLike && bizu) {
+      onLike(bizu.id);
+    }
+  };
+
   if (!bizu || !open) return null;
 
   return (
@@ -31,6 +54,27 @@ export function BizuDetailModal({ bizu, open, onOpenChange }: BizuDetailModalPro
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <div className={styles.header}>
           <h2 className={styles.title}>{bizu.title}</h2>
+          <div className={styles.headerActions}>
+            {canEdit && (
+              <button 
+                className={styles.editButton}
+                onClick={handleEdit}
+                title="Editar bizu"
+              >
+                ✏️ Editar
+              </button>
+            )}
+            <button 
+              className={`${styles.likeButton} ${bizu.is_liked ? styles.liked : ''}`}
+              onClick={handleLike}
+              title={bizu.is_liked ? 'Descurtir' : 'Curtir'}
+            >
+              <span className={styles.heartIcon}>
+                {bizu.is_liked ? '❤️' : '🤍'}
+              </span>
+              {bizu.likes}
+            </button>
+          </div>
         </div>
         <div className={styles.metaRow}>
           <span className={styles.badge}>{bizu.category}</span>
@@ -55,7 +99,9 @@ export function BizuDetailModal({ bizu, open, onOpenChange }: BizuDetailModalPro
             <Image src={bizu.image_url} alt={bizu.title} width={600} height={400} className={styles.image} />
           </div>
         )}
-        <button className={styles.closeBtn} onClick={() => onOpenChange(false)}>Fechar</button>
+        <div className={styles.footer}>
+          <button className={styles.closeBtn} onClick={() => onOpenChange(false)}>Fechar</button>
+        </div>
       </div>
     </div>
   );

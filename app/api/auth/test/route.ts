@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
     );
     
     // Verificar sessão
+    console.log('🔐 Verificando sessão...');
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     
     if (sessionError) {
@@ -42,6 +43,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Verificar usuário
+    console.log('👤 Verificando usuário...');
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     
     if (userError) {
@@ -56,11 +58,23 @@ export async function GET(request: NextRequest) {
       console.log('❌ Nenhuma sessão ou usuário encontrado');
       return NextResponse.json({ 
         authenticated: false,
-        message: 'Nenhuma sessão ativa encontrada'
+        message: 'Nenhuma sessão ativa encontrada',
+        cookies: cookieStore.getAll().map(c => c.name)
       });
     }
     
     console.log('✅ Usuário autenticado:', user.id);
+    
+    // Verificar perfil do usuário
+    const { data: profile, error: profileError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+    
+    if (profileError) {
+      console.error('❌ Erro ao buscar perfil:', profileError);
+    }
     
     return NextResponse.json({ 
       authenticated: true,
@@ -69,10 +83,12 @@ export async function GET(request: NextRequest) {
         email: user.email,
         created_at: user.created_at
       },
+      profile: profile,
       session: {
         expires_at: session.expires_at,
         refresh_token: !!session.refresh_token
-      }
+      },
+      cookies: cookieStore.getAll().map(c => c.name)
     });
   } catch (error) {
     console.error('❌ Erro geral no teste de autenticação:', error);

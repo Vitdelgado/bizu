@@ -174,11 +174,14 @@ export function TopBizusSection() {
       </div>
 
       {/* Modal de detalhes */}
-      {showDetailModal && (
+      {showDetailModal && selectedBizu && (
         <BizuDetailModal
           bizu={selectedBizu}
           open={showDetailModal}
           onOpenChange={setShowDetailModal}
+          onEdit={handleEdit}
+          onLike={handleLike}
+          canEdit={isAdmin || selectedBizu.author_id === profile?.id}
         />
       )}
 

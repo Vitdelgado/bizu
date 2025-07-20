@@ -20,6 +20,15 @@ export function AdminPage() {
   const [selectedBizu, setSelectedBizu] = useState<Bizu | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
+  // Inicializar estado de likes quando bizus carregam
+  useEffect(() => {
+    if (bizus.length > 0) {
+      bizus.forEach(bizu => {
+        setInitialLikeState(bizu.id, bizu.is_liked || false, bizu.likes);
+      });
+    }
+  }, [bizus, setInitialLikeState]);
+
   // Mostrar loading enquanto verifica autenticação
   if (loading) {
     return (
@@ -54,15 +63,6 @@ export function AdminPage() {
       </div>
     );
   }
-
-  // Inicializar estado de likes quando bizus carregam
-  useEffect(() => {
-    if (bizus.length > 0) {
-      bizus.forEach(bizu => {
-        setInitialLikeState(bizu.id, bizu.is_liked || false, bizu.likes);
-      });
-    }
-  }, [bizus, setInitialLikeState]);
 
   // Bizus com estado de like atualizado
   const bizusWithLikes = bizus.map(bizu => ({

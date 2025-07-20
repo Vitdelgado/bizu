@@ -3,7 +3,11 @@
 -- =====================================================
 
 -- Criação do enum para roles
-CREATE TYPE IF NOT EXISTS role_type AS ENUM ('admin', 'suporte');
+DO $$ BEGIN
+    CREATE TYPE role_type AS ENUM ('admin', 'suporte');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- Tabela de usuários
 CREATE TABLE IF NOT EXISTS users (

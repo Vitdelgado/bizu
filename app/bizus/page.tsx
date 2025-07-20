@@ -6,6 +6,7 @@ import { useBizus } from '@/hooks/use-bizus';
 import { BizuCard } from '@/components/bizu-card';
 import { BizuDetailModal } from '@/components/bizu-detail-modal';
 import { CreateBizuModal } from '@/components/create-bizu-modal';
+import { EditBizuModal } from '@/components/edit-bizu-modal';
 import { AuthModal } from '@/components/auth-modal';
 import { Bizu } from '@/components/bizu-card';
 import Link from 'next/link';
@@ -13,10 +14,11 @@ import styles from './page.module.css';
 
 export default function BizusPage() {
   const { profile, loading } = useAuth();
-  const { bizus, loading: bizusLoading } = useBizus();
+  const { bizus, loading: bizusLoading, updateBizu, canEdit } = useBizus();
   const [selectedBizu, setSelectedBizu] = useState<Bizu | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showCreateBizuModal, setShowCreateBizuModal] = useState(false);
+  const [showEditBizuModal, setShowEditBizuModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -36,6 +38,24 @@ export default function BizusPage() {
     } else {
       setShowAuthModal(true);
     }
+  };
+
+  const handleEditBizu = (bizu: Bizu) => {
+    if (canEdit(bizu)) {
+      setSelectedBizu(bizu);
+      setShowEditBizuModal(true);
+    }
+  };
+
+  const handleSaveBizu = async (bizuId: string, bizuData: Partial<Bizu>) => {
+    await updateBizu(bizuId, bizuData);
+    setShowEditBizuModal(false);
+    setSelectedBizu(null);
+  };
+
+  const handleLike = async (bizuId: string) => {
+    // Implementar lógica de like se necessário
+    console.log('Like clicked for bizu:', bizuId);
   };
 
   if (loading) {
@@ -117,6 +137,9 @@ export default function BizusPage() {
                   setSelectedBizu(bizu);
                   setShowDetailModal(true);
                 }}
+                onLike={handleLike}
+                onEdit={handleEditBizu}
+                canEdit={canEdit(bizu)}
               />
             ))}
           </div>
@@ -164,6 +187,15 @@ export default function BizusPage() {
         <CreateBizuModal
           open={showCreateBizuModal}
           onOpenChange={setShowCreateBizuModal}
+        />
+      )}
+
+      {showEditBizuModal && selectedBizu && (
+        <EditBizuModal
+          bizu={selectedBizu}
+          open={showEditBizuModal}
+          onOpenChange={setShowEditBizuModal}
+          onSave={handleSaveBizu}
         />
       )}
 

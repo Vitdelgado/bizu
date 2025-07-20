@@ -28,6 +28,7 @@
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #e5e7eb;
+  gap: 1rem; /* Espaço entre título e ações */
 }
 
 .title {
@@ -36,27 +37,30 @@
   color: #1f2937;
   margin: 0;
   flex: 1;
+  min-width: 0; /* Permite que o título encolha */
 }
 
 .headerActions {
   display: flex;
-  gap: 12px;
+  gap: 8px; /* Reduzir gap entre botões */
   align-items: center;
+  flex-shrink: 0; /* Impede que os botões encolham */
 }
 
 .editButton {
   background: #3b82f6;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 6px 12px; /* Reduzir padding */
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px; /* Reduzir fonte */
   font-weight: 500;
   transition: background-color 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px; /* Reduzir gap */
+  white-space: nowrap; /* Impede quebra de linha */
 }
 
 .editButton:hover {
@@ -66,16 +70,18 @@
 .likeButton {
   background: none;
   border: 2px solid #e5e7eb;
-  padding: 8px 16px;
+  padding: 6px 12px; /* Reduzir padding */
   border-radius: 20px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px; /* Reduzir fonte */
   font-weight: 500;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px; /* Reduzir gap */
   color: #666;
+  white-space: nowrap; /* Impede quebra de linha */
+  min-width: fit-content; /* Garante que não encolha demais */
 }
 
 .likeButton:hover {
@@ -95,7 +101,7 @@
 }
 
 .heartIcon {
-  font-size: 16px;
+  font-size: 14px; /* Reduzir tamanho do ícone */
   transition: transform 0.2s ease;
 }
 
@@ -173,9 +179,6 @@
   border: 1px solid #eee;
 }
 .closeBtn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
   background: #2563eb;
   color: #fff;
   border: none;
@@ -183,7 +186,34 @@
   padding: 0.5rem 1rem;
   font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
+
 .closeBtn:hover {
   background: #1d4ed8;
+} 
+
+/* Responsividade para telas menores */
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .headerActions {
+    justify-content: center;
+    gap: 12px; /* Mais espaço em telas pequenas */
+  }
+
+  .editButton,
+  .likeButton {
+    padding: 8px 16px; /* Mais padding em telas pequenas */
+    font-size: 14px;
+  }
 } 

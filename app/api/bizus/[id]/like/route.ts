@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 export async function POST(
   request: NextRequest,
@@ -7,6 +8,7 @@ export async function POST(
 ) {
   try {
     const { id: bizuId } = await params;
+    const supabase = createRouteHandlerClient({ cookies });
     
     // Verificar autenticação
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -73,6 +75,7 @@ export async function DELETE(
 ) {
   try {
     const { id: bizuId } = await params;
+    const supabase = createRouteHandlerClient({ cookies });
     
     // Verificar autenticação
     const { data: { user }, error: authError } = await supabase.auth.getUser();

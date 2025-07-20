@@ -22,6 +22,8 @@ export function useLikes() {
       const isLiked = likedBizus.has(bizuId);
       const method = isLiked ? 'DELETE' : 'POST';
       
+      console.log(`Tentando ${isLiked ? 'descurtir' : 'curtir'} bizu ${bizuId}`);
+      
       const response = await fetch(`/api/bizus/${bizuId}/like`, {
         method,
         headers: {
@@ -29,11 +31,15 @@ export function useLikes() {
         },
       });
 
+      console.log('Resposta da API:', response.status, response.statusText);
+
       if (!response.ok) {
-        throw new Error('Erro ao processar like');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.log('Dados da resposta:', data);
       
       // Atualizar estado local
       setLikeCounts(prev => ({
@@ -62,7 +68,7 @@ export function useLikes() {
       console.error('Erro ao processar like:', error);
       toast({ 
         title: 'Erro', 
-        description: 'Erro ao processar like. Tente novamente.', 
+        description: error instanceof Error ? error.message : 'Erro ao processar like. Tente novamente.', 
         variant: 'destructive' 
       });
     }

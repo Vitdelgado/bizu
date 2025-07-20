@@ -15,7 +15,7 @@ import styles from './page.module.css';
 
 export default function BizusPage() {
   const { profile, loading } = useAuth();
-  const { bizus, loading: bizusLoading, updateBizu, canEdit } = useBizus();
+  const { bizus, loading: bizusLoading, updateBizu, deleteBizu, canEdit, canDelete } = useBizus();
   const { likeBizu, isLiked, getLikeCount, setInitialLikeState } = useLikes();
   const [selectedBizu, setSelectedBizu] = useState<Bizu | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -67,6 +67,20 @@ export default function BizusPage() {
     await updateBizu(bizuId, bizuData);
     setShowEditBizuModal(false);
     setSelectedBizu(null);
+  };
+
+  const handleDeleteBizu = async (bizuId: string) => {
+    try {
+      await deleteBizu(bizuId);
+      // Se o bizu deletado era o selecionado, fechar o modal
+      if (selectedBizu?.id === bizuId) {
+        setShowDetailModal(false);
+        setShowEditBizuModal(false);
+        setSelectedBizu(null);
+      }
+    } catch (error) {
+      console.error('Erro ao deletar bizu:', error);
+    }
   };
 
   const handleLike = async (bizuId: string) => {
@@ -154,7 +168,9 @@ export default function BizusPage() {
                 }}
                 onLike={handleLike}
                 onEdit={handleEditBizu}
+                onDelete={handleDeleteBizu}
                 canEdit={canEdit(bizu)}
+                canDelete={canDelete(bizu)}
               />
             ))}
           </div>

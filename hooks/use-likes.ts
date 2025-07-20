@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from './use-auth';
 import { useToast } from './use-toast';
+import { supabase } from '@/lib/supabase';
 
 export function useLikes() {
   const [likedBizus, setLikedBizus] = useState<Set<string>>(new Set());
@@ -24,10 +25,17 @@ export function useLikes() {
       
       console.log(`Tentando ${isLiked ? 'descurtir' : 'curtir'} bizu ${bizuId}`);
       
+      // Obter token de sessão
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('Token de sessão não encontrado');
+      }
+      
       const response = await fetch(`/api/bizus/${bizuId}/like`, {
         method,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
         },
       });
 

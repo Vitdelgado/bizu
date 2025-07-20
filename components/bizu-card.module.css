@@ -39,6 +39,12 @@
   gap: 8px;
 }
 
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .title {
   font-size: 1.25rem;
   font-weight: 600;
@@ -78,6 +84,20 @@
 
 .editButton:hover {
   background-color: #f3f4f6;
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.deleteButton:hover {
+  background-color: #fef2f2;
 }
 
 .preview {

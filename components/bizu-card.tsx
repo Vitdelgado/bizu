@@ -20,10 +20,12 @@ interface BizuCardProps {
   onClick?: () => void;
   onLike?: (bizuId: string) => void;
   onEdit?: (bizu: Bizu) => void;
+  onDelete?: (bizuId: string) => void;
   canEdit?: boolean;
+  canDelete?: boolean;
 }
 
-export function BizuCard({ bizu, onClick, onLike, onEdit, canEdit = false }: BizuCardProps) {
+export function BizuCard({ bizu, onClick, onLike, onEdit, onDelete, canEdit = false, canDelete = false }: BizuCardProps) {
   const [dateText, setDateText] = useState('');
 
   useEffect(() => {
@@ -66,6 +68,13 @@ export function BizuCard({ bizu, onClick, onLike, onEdit, canEdit = false }: Biz
     }
   };
 
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete && confirm('Tem certeza que deseja apagar este bizu? Esta ação não pode ser desfeita.')) {
+      onDelete(bizu.id);
+    }
+  };
+
   return (
     <div className={styles.card} onClick={handleClick}>
       <div className={styles.cardContent}>
@@ -76,15 +85,26 @@ export function BizuCard({ bizu, onClick, onLike, onEdit, canEdit = false }: Biz
           </div>
           <div className={styles.headerRight}>
             <span className={styles.views}>{bizu.views} visualizações</span>
-            {canEdit && (
-              <button 
-                className={styles.editButton}
-                onClick={handleEdit}
-                title="Editar bizu"
-              >
-                ✏️
-              </button>
-            )}
+            <div className={styles.actionButtons}>
+              {canEdit && (
+                <button 
+                  className={styles.editButton}
+                  onClick={handleEdit}
+                  title="Editar bizu"
+                >
+                  ✏️
+                </button>
+              )}
+              {canDelete && (
+                <button 
+                  className={styles.deleteButton}
+                  onClick={handleDelete}
+                  title="Apagar bizu"
+                >
+                  🗑️
+                </button>
+              )}
+            </div>
           </div>
         </div>
         <p className={styles.preview}>{getPreview(bizu.content)}</p>
